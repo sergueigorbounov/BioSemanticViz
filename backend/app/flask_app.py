@@ -7,6 +7,13 @@ import pandas as pd
 import numpy as np
 from routes.biological_data import bio_bp
 import argparse
+import sys
+
+# Add the parent directory to sys.path
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Import the biological routes
+from api.biological_routes import router as bio_router
 
 app = Flask(__name__)
 # Configure CORS to allow requests from any origin
@@ -18,6 +25,33 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # Register blueprints
 app.register_blueprint(bio_bp, url_prefix='/api')
+
+# Create a route mapper for FastAPI routes
+def fastapi_route_to_flask(fastapi_router):
+    """Convert FastAPI routes to Flask routes"""
+    for route in fastapi_router.routes:
+        endpoint = route.endpoint
+        path = route.path
+        methods = route.methods
+
+        # Convert path parameters from FastAPI format {param} to Flask format <param>
+        flask_path = path
+        for param in route.param_convertors:
+            flask_path = flask_path.replace(f"{{{param}}}", f"<{param}>")
+
+        # Register the route with Flask
+        app.add_url_rule(
+            flask_path, 
+            endpoint=endpoint.__name__, 
+            view_func=lambda *args, **kwargs: endpoint(*args, **kwargs), 
+            methods=methods
+        )
+
+# Map FastAPI routes to Flask routes
+try:
+    fastapi_route_to_flask(bio_router)
+except Exception as e:
+    print(f"Failed to map FastAPI routes: {e}")
 
 # Add routes without /api prefix to match incoming requests
 @app.route('/status')

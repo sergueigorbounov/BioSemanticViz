@@ -12,8 +12,9 @@ import {
   Tab,
 } from '@mui/material';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import { SpeciesTree } from '../visualizations/SpeciesTree';
-import { api } from '../../services/api';
+import SpeciesTree from '../visualizations/SpeciesTree';
+import axios from 'axios';
+import { SpeciesTreeData } from '../../types/biology';
 
 // Types for our biological entities
 interface Species {
@@ -44,6 +45,15 @@ enum ViewState {
   GENE_DETAILS = 'gene_details'
 }
 
+// Create API client
+const apiClient = axios.create({
+  baseURL: 'http://localhost:8002',
+  headers: {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*'
+  }
+});
+
 const BiologicalExplorer: React.FC = () => {
   // State management
   const [currentView, setCurrentView] = useState<ViewState>(ViewState.SPECIES_VIEW);
@@ -51,7 +61,7 @@ const BiologicalExplorer: React.FC = () => {
   const [selectedOrthogroup, setSelectedOrthogroup] = useState<OrthoGroup | null>(null);
   const [selectedGene, setSelectedGene] = useState<Gene | null>(null);
   
-  const [speciesData, setSpeciesData] = useState<Species[]>([]);
+  const [speciesData, setSpeciesData] = useState<SpeciesTreeData | null>(null);
   const [orthogroups, setOrthogroups] = useState<OrthoGroup[]>([]);
   const [genes, setGenes] = useState<Gene[]>([]);
   
@@ -66,7 +76,7 @@ const BiologicalExplorer: React.FC = () => {
       setError(null);
       
       try {
-        const response = await api.get('/api/species-tree');
+        const response = await apiClient.get('/api/species-tree');
         setSpeciesData(response.data);
       } catch (err) {
         setError('Failed to load species data');
@@ -80,16 +90,28 @@ const BiologicalExplorer: React.FC = () => {
   }, []);
   
   // Handle species selection
-  const handleSpeciesSelect = async (species: Species) => {
-    setSelectedSpecies(species);
-    setCurrentView(ViewState.ORTHOGROUP_VIEW);
-    
+  const handleSpeciesSelect = async (speciesId: string) => {
     setLoading(true);
     try {
-      const response = await api.get(`/api/species/${species.id}/orthogroups`);
-      setOrthogroups(response.data);
+      // First get the species details
+      const speciesResponse = await apiClient.get(`/api/species/${speciesId}`);
+      if (speciesResponse.data?.success && speciesResponse.data.data.length > 0) {
+        const species = speciesResponse.data.data[0];
+        setSelectedSpecies(species);
+        setCurrentView(ViewState.ORTHOGROUP_VIEW);
+        
+        // Then get the orthogroups
+        const response = await apiClient.get(`/api/species/${speciesId}/orthogroups`);
+        if (response.data?.success) {
+          setOrthogroups(response.data.data);
+        } else {
+          setError('No orthogroups found for this species');
+        }
+      } else {
+        setError('Species not found');
+      }
     } catch (err) {
-      setError('Failed to load orthogroups');
+      setError('Failed to load species and orthogroups');
       console.error(err);
     } finally {
       setLoading(false);
@@ -97,16 +119,28 @@ const BiologicalExplorer: React.FC = () => {
   };
   
   // Handle orthogroup selection
-  const handleOrthogroupSelect = async (orthogroup: OrthoGroup) => {
-    setSelectedOrthogroup(orthogroup);
-    setCurrentView(ViewState.GENE_VIEW);
-    
+  const handleOrthogroupSelect = async (orthogroupId: string) => {
     setLoading(true);
     try {
-      const response = await api.get(`/api/orthogroup/${orthogroup.id}/genes`);
-      setGenes(response.data);
+      // First get the orthogroup details
+      const ogResponse = await apiClient.get(`/api/orthogroup/${orthogroupId}`);
+      if (ogResponse.data?.success && ogResponse.data.data.length > 0) {
+        const orthogroup = ogResponse.data.data[0];
+        setSelectedOrthogroup(orthogroup);
+        setCurrentView(ViewState.GENE_VIEW);
+        
+        // Then get the genes
+        const response = await apiClient.get(`/api/orthogroup/${orthogroupId}/genes`);
+        if (response.data?.success) {
+          setGenes(response.data.data);
+        } else {
+          setError('No genes found for this orthogroup');
+        }
+      } else {
+        setError('Orthogroup not found');
+      }
     } catch (err) {
-      setError('Failed to load genes');
+      setError('Failed to load orthogroup and genes');
       console.error(err);
     } finally {
       setLoading(false);
@@ -114,9 +148,22 @@ const BiologicalExplorer: React.FC = () => {
   };
   
   // Handle gene selection
-  const handleGeneSelect = (gene: Gene) => {
-    setSelectedGene(gene);
-    setCurrentView(ViewState.GENE_DETAILS);
+  const handleGeneSelect = async (geneId: string) => {
+    setLoading(true);
+    try {
+      const response = await apiClient.get(`/api/gene/${geneId}`);
+      if (response.data?.success && response.data.data) {
+        setSelectedGene(response.data.data);
+        setCurrentView(ViewState.GENE_DETAILS);
+      } else {
+        setError('Gene not found');
+      }
+    } catch (err) {
+      setError('Failed to load gene details');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
   };
   
   // Handle tab change
@@ -205,19 +252,39 @@ const BiologicalExplorer: React.FC = () => {
         return (
           <Paper elevation={2} sx={{ p: 2 }}>
             <Typography variant="h6" gutterBottom>Species Tree</Typography>
-            <SpeciesTree data={speciesData} onSpeciesSelect={handleSpeciesSelect} />
+            <SpeciesTree treeData={speciesData} onSpeciesSelect={handleSpeciesSelect} />
           </Paper>
         );
         
-      // Placeholders for other views - would be implemented with actual components
       case ViewState.ORTHOGROUP_VIEW:
         return (
           <Paper elevation={2} sx={{ p: 2 }}>
             <Typography variant="h6" gutterBottom>Orthogroups for {selectedSpecies?.name}</Typography>
-            <Typography variant="body2" color="text.secondary">
-              This would display orthogroups for the selected species
-            </Typography>
-            {/* Would be replaced with actual orthogroup list component */}
+            {orthogroups.length > 0 ? (
+              <Box sx={{ mt: 2 }}>
+                {orthogroups.map((og) => (
+                  <Paper 
+                    key={og.id} 
+                    sx={{ p: 2, mb: 2, cursor: 'pointer' }}
+                    onClick={() => handleOrthogroupSelect(og.id)}
+                  >
+                    <Typography variant="subtitle1">{og.name}</Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {og.description}
+                    </Typography>
+                    <Box sx={{ mt: 1 }}>
+                      <Typography variant="caption">
+                        Species: {og.species.join(', ')} | Genes: {og.genes.length}
+                      </Typography>
+                    </Box>
+                  </Paper>
+                ))}
+              </Box>
+            ) : (
+              <Typography variant="body2" color="text.secondary">
+                No orthogroups found for this species
+              </Typography>
+            )}
           </Paper>
         );
         
@@ -225,10 +292,25 @@ const BiologicalExplorer: React.FC = () => {
         return (
           <Paper elevation={2} sx={{ p: 2 }}>
             <Typography variant="h6" gutterBottom>Genes in {selectedOrthogroup?.name}</Typography>
-            <Typography variant="body2" color="text.secondary">
-              This would display genes in the selected orthogroup
-            </Typography>
-            {/* Would be replaced with actual gene list component */}
+            {genes.length > 0 ? (
+              <Box sx={{ mt: 2 }}>
+                {genes.map((gene) => (
+                  <Paper 
+                    key={gene.id} 
+                    sx={{ p: 2, mb: 2, cursor: 'pointer' }}
+                    onClick={() => handleGeneSelect(gene.id)}
+                  >
+                    <Typography variant="subtitle1">{gene.label}</Typography>
+                    <Typography variant="body2">ID: {gene.id}</Typography>
+                    <Typography variant="body2">Species: {gene.speciesId}</Typography>
+                  </Paper>
+                ))}
+              </Box>
+            ) : (
+              <Typography variant="body2" color="text.secondary">
+                No genes found in this orthogroup
+              </Typography>
+            )}
           </Paper>
         );
         
@@ -247,11 +329,11 @@ const BiologicalExplorer: React.FC = () => {
             </Box>
             
             <Box role="tabpanel" hidden={activeTab !== 0}>
-              {activeTab === 0 && (
+              {activeTab === 0 && selectedGene && (
                 <Box>
-                  <Typography variant="body2" color="text.secondary">
-                    This would display general information about the selected gene
-                  </Typography>
+                  <Typography variant="body1">ID: {selectedGene.id}</Typography>
+                  <Typography variant="body1">Species: {selectedGene.speciesId}</Typography>
+                  <Typography variant="body1">Orthogroup: {selectedGene.orthoGroupId}</Typography>
                 </Box>
               )}
             </Box>

@@ -1,75 +1,118 @@
 {
-  "species": [
+  "id": "root",
+  "name": "Eukaryota",
+  "type": "species",
+  "children": [
     {
-      "id": "root",
-      "name": "Eukaryota",
+      "id": "plants",
+      "name": "Plantae",
+      "type": "species",
       "children": [
         {
-          "id": "plants",
-          "name": "Plantae",
+          "id": "ath",
+          "name": "Arabidopsis thaliana",
+          "type": "species",
           "children": [
             {
-              "id": "arabidopsis",
-              "name": "Arabidopsis thaliana",
-              "orthogroups": [
-                "OG0001",
-                "OG0002"
-              ]
+              "id": "OG0000001",
+              "name": "Photosystem II protein D1",
+              "type": "orthogroup"
             },
             {
-              "id": "rice",
-              "name": "Oryza sativa",
-              "orthogroups": [
-                "OG0001",
-                "OG0003"
-              ]
+              "id": "OG0000002",
+              "name": "Phytochrome family",
+              "type": "orthogroup"
+            },
+            {
+              "id": "OG0000003",
+              "name": "Rubisco small subunit",
+              "type": "orthogroup"
             }
           ]
         },
         {
-          "id": "animals",
-          "name": "Metazoa",
+          "id": "osa",
+          "name": "Oryza sativa",
+          "type": "species",
           "children": [
             {
-              "id": "human",
-              "name": "Homo sapiens",
-              "orthogroups": [
-                "OG0002",
-                "OG0004"
-              ]
+              "id": "OG0000001",
+              "name": "Photosystem II protein D1",
+              "type": "orthogroup"
             },
             {
-              "id": "mouse",
-              "name": "Mus musculus",
-              "orthogroups": [
-                "OG0002",
-                "OG0004"
-              ]
+              "id": "OG0000004",
+              "name": "MADS box transcription factors",
+              "type": "orthogroup"
+            }
+          ]
+        },
+        {
+          "id": "zma",
+          "name": "Zea mays",
+          "type": "species",
+          "children": [
+            {
+              "id": "OG0000002",
+              "name": "Phytochrome family",
+              "type": "orthogroup"
+            },
+            {
+              "id": "OG0000003",
+              "name": "Rubisco small subunit",
+              "type": "orthogroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "legumes",
+      "name": "Fabaceae",
+      "type": "species",
+      "children": [
+        {
+          "id": "gma",
+          "name": "Glycine max",
+          "type": "species",
+          "children": [
+            {
+              "id": "OG0000003",
+              "name": "Rubisco small subunit",
+              "type": "orthogroup"
+            },
+            {
+              "id": "OG0000005",
+              "name": "Cellulose synthase",
+              "type": "orthogroup"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "nightshades",
+      "name": "Solanaceae",
+      "type": "species",
+      "children": [
+        {
+          "id": "sly",
+          "name": "Solanum lycopersicum",
+          "type": "species",
+          "children": [
+            {
+              "id": "OG0000002",
+              "name": "Phytochrome family",
+              "type": "orthogroup"
+            },
+            {
+              "id": "OG0000003",
+              "name": "Rubisco small subunit",
+              "type": "orthogroup"
             }
           ]
         }
       ]
     }
-  ],
-  "orthogroups": {
-    "OG0001": [
-      "plant_gene1",
-      "plant_gene2",
-      "rice_gene1"
-    ],
-    "OG0002": [
-      "plant_gene3",
-      "human_gene1",
-      "mouse_gene1"
-    ],
-    "OG0003": [
-      "rice_gene2",
-      "rice_gene3"
-    ],
-    "OG0004": [
-      "human_gene2",
-      "mouse_gene2",
-      "human_gene3"
-    ]
-  }
+  ]
 }
