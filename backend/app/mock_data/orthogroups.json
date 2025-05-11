@@ -1,0 +1,39 @@
+{
+  "orthogroups": [
+    {
+      "id": "OG0000001",
+      "name": "Photosystem II protein D1",
+      "species": ["ath", "osa", "zma"],
+      "genes": ["AT1G05010", "OS01G0123400", "GRMZM2G321533"],
+      "description": "Core protein of photosystem II"
+    },
+    {
+      "id": "OG0000002",
+      "name": "Phytochrome family",
+      "species": ["ath", "osa", "zma", "sly"],
+      "genes": ["AT1G09570", "AT2G18790", "OS03G0719800", "GRMZM2G124532", "Solyc09g014520"],
+      "description": "Red/far-red light photoreceptors"
+    },
+    {
+      "id": "OG0000003",
+      "name": "Rubisco small subunit",
+      "species": ["ath", "osa", "zma", "sly", "gma"],
+      "genes": ["AT1G67090", "AT5G38430", "OS12G0274700", "GRMZM2G098520", "Solyc02g085950", "GLYMA_19G076400"],
+      "description": "RuBisCO small subunit"
+    },
+    {
+      "id": "OG0000004",
+      "name": "MADS box transcription factors",
+      "species": ["ath", "osa"],
+      "genes": ["AT5G20240", "OS01G0883100", "OS05G0423400"],
+      "description": "Floral homeotic proteins"
+    },
+    {
+      "id": "OG0000005",
+      "name": "Cellulose synthase",
+      "species": ["ath", "osa", "gma"],
+      "genes": ["AT4G32410", "AT5G44030", "OS01G0750300", "GLYMA_10G037200"],
+      "description": "Cellulose biosynthesis"
+    }
+  ]
+} 

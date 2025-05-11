@@ -6,7 +6,6 @@ import {
   Typography,
   Button,
   Box,
-  useTheme,
   Container,
 } from '@mui/material';
 import BiotechIcon from '@mui/icons-material/Biotech';
@@ -16,11 +15,10 @@ const navLinks = [
   { name: 'Home', path: '/' },
   { name: 'Upload', path: '/upload' },
   { name: 'Biology', path: '/biology' },
+  { name: 'Explorer', path: '/explorer' },
 ];
 
 const Header: React.FC = () => {
-  const theme = useTheme();
-
   return (
     <AppBar position="static" sx={{ marginBottom: 2 }}>
       <Container maxWidth="xl">

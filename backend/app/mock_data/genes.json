@@ -1,0 +1,135 @@
+{
+  "genes": [
+    {
+      "id": "AT1G05010",
+      "label": "psbA",
+      "species_id": "ath",
+      "species_name": "Arabidopsis thaliana",
+      "orthogroup_id": "OG0000001",
+      "chromosome": "1",
+      "start": 1485122,
+      "end": 1486519,
+      "strand": "+",
+      "go_terms": [
+        {
+          "id": "GO:0009535",
+          "name": "chloroplast thylakoid membrane",
+          "definition": "The portion of the thylakoid membrane surrounding the photosystem II complex in the chloroplast.",
+          "aspect": "C",
+          "evidence_code": "IDA"
+        },
+        {
+          "id": "GO:0009539",
+          "name": "photosystem II reaction center",
+          "definition": "A protein complex that contains the D1 and D2 core proteins of photosystem II.",
+          "aspect": "C",
+          "evidence_code": "IEA"
+        },
+        {
+          "id": "GO:0015979",
+          "name": "photosynthesis",
+          "definition": "The process by which a living organism captures light energy and uses it to drive the synthesis of organic compounds.",
+          "aspect": "P",
+          "evidence_code": "IDA"
+        }
+      ],
+      "external_links": [
+        {
+          "database": "TAIR",
+          "id": "AT1G05010",
+          "url": "https://www.arabidopsis.org/servlets/TairObject?id=137151&type=locus"
+        },
+        {
+          "database": "UniProt",
+          "id": "P83755",
+          "url": "https://www.uniprot.org/uniprot/P83755"
+        }
+      ]
+    },
+    {
+      "id": "AT1G09570",
+      "label": "PHYA",
+      "species_id": "ath",
+      "species_name": "Arabidopsis thaliana",
+      "orthogroup_id": "OG0000002",
+      "chromosome": "1",
+      "start": 3093200,
+      "end": 3097687,
+      "strand": "-",
+      "go_terms": [
+        {
+          "id": "GO:0009584",
+          "name": "detection of visible light",
+          "definition": "The series of events in which a visible light stimulus is received by a cell and converted into a molecular signal.",
+          "aspect": "P",
+          "evidence_code": "IDA"
+        },
+        {
+          "id": "GO:0010161",
+          "name": "red light signaling pathway",
+          "definition": "A series of molecular signals initiated by the detection of red light by a photoreceptor and resulting in the activation or repression of gene expression.",
+          "aspect": "P",
+          "evidence_code": "IMP"
+        },
+        {
+          "id": "GO:0042803",
+          "name": "protein homodimerization activity",
+          "definition": "Interacting selectively and non-covalently with an identical protein to form a homodimer.",
+          "aspect": "F",
+          "evidence_code": "IPI"
+        }
+      ],
+      "external_links": [
+        {
+          "database": "TAIR",
+          "id": "AT1G09570",
+          "url": "https://www.arabidopsis.org/servlets/TairObject?id=137391&type=locus"
+        },
+        {
+          "database": "UniProt",
+          "id": "P14712",
+          "url": "https://www.uniprot.org/uniprot/P14712"
+        }
+      ]
+    },
+    {
+      "id": "OS01G0123400",
+      "label": "psbA",
+      "species_id": "osa",
+      "species_name": "Oryza sativa",
+      "orthogroup_id": "OG0000001",
+      "chromosome": "1",
+      "start": 2509876,
+      "end": 2511453,
+      "strand": "+",
+      "go_terms": [
+        {
+          "id": "GO:0009535",
+          "name": "chloroplast thylakoid membrane",
+          "definition": "The portion of the thylakoid membrane surrounding the photosystem II complex in the chloroplast.",
+          "aspect": "C",
+          "evidence_code": "IEA"
+        },
+        {
+          "id": "GO:0015979",
+          "name": "photosynthesis",
+          "definition": "The process by which a living organism captures light energy and uses it to drive the synthesis of organic compounds.",
+          "aspect": "P",
+          "evidence_code": "IEA"
+        }
+      ],
+      "external_links": [
+        {
+          "database": "RAP-DB",
+          "id": "OS01G0123400",
+          "url": "https://rapdb.dna.affrc.go.jp/viewer/gbrowse_details/irgsp1?name=OS01G0123400"
+        },
+        {
+          "database": "UniProt",
+          "id": "P0C434",
+          "url": "https://www.uniprot.org/uniprot/P0C434"
+        }
+      ]
+    }
+  ]
+} 
