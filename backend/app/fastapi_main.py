@@ -388,6 +388,42 @@ async def get_dashboard_stats():
             "data": {}
         }
 
+@app.get("/api/orthogroups", response_model=OrthoGroupResponse)
+async def get_orthogroups():
+    """Get all orthogroups"""
+    try:
+        data = load_mock_data("orthogroups.json")
+        orthogroup_list = [OrthoGroup(**item) for item in data.get("orthogroups", [])]
+        
+        return {
+            "success": True,
+            "data": orthogroup_list
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"Failed to load orthogroup data: {str(e)}",
+            "data": []
+        }
+
+@app.get("/api/genes", response_model=GeneResponse)
+async def get_genes():
+    """Get all genes"""
+    try:
+        data = load_mock_data("genes.json")
+        gene_list = [Gene(**item) for item in data.get("genes", [])]
+        
+        return {
+            "success": True,
+            "data": gene_list
+        }
+    except Exception as e:
+        return {
+            "success": False,
+            "message": f"Failed to load gene data: {str(e)}",
+            "data": []
+        }
+
 # File upload endpoint
 @app.post("/upload")
 @app.post("/api/upload")

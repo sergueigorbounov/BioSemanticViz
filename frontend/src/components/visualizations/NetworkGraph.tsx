@@ -165,11 +165,13 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({ nodes, edges, loading, erro
       renderGraph();
     }
     
+    // Store ref value to avoid changes during cleanup
+    const currentSvgRef = svgRef.current;
+    
     return () => {
-      // Cleanup
-      const svg = svgRef.current;
-      if (svg) {
-        d3.select(svg).selectAll('*').remove();
+      // Use the captured ref value for cleanup
+      if (currentSvgRef) {
+        d3.select(currentSvgRef).selectAll('*').remove();
       }
     };
   }, [nodes, edges, loading, error, renderGraph]);

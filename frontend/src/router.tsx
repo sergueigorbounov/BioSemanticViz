@@ -5,9 +5,9 @@ import UploadPage from './components/pages/UploadPage';
 import VisualizePage from './components/pages/VisualizationPage';
 import NotFoundPage from './components/pages/NotFoundPage';
 import AnalysisPage from './components/pages/AnalysisPage';
-import BiologyHierarchyPage from './components/pages/BiologyHierarchyPage';
 import BiologicalExplorer from './components/pages/BiologicalExplorer';
 import BioDashboard from './components/pages/BioDashboard';
+import AnalyticsDashboard from './components/pages/AnalyticsDashboard';
 import App from './App';
 
 // Opt into future React Router behaviors
@@ -25,9 +25,9 @@ export const router = createBrowserRouter(
       <Route path="upload" element={<UploadPage />} />
       <Route path="visualize/:id" element={<VisualizePage />} />
       <Route path="analysis/:id" element={<AnalysisPage />} />
-      <Route path="biology" element={<BiologyHierarchyPage />} />
       <Route path="explorer" element={<BiologicalExplorer />} />
       <Route path="dashboard" element={<BioDashboard />} />
+      <Route path="analytics" element={<AnalyticsDashboard />} />
       <Route path="*" element={<NotFoundPage />} />
     </Route>
   ),

@@ -14,9 +14,9 @@ import BiotechIcon from '@mui/icons-material/Biotech';
 const navLinks = [
   { name: 'Home', path: '/' },
   { name: 'Upload', path: '/upload' },
-  { name: 'Biology', path: '/biology' },
   { name: 'Explorer', path: '/explorer' },
   { name: 'Dashboard', path: '/dashboard' },
+  { name: 'Analytics', path: '/analytics' },
 ];
 
 const Header: React.FC = () => {
