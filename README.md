@@ -1,90 +1,116 @@
 # BioSemanticViz
 
-A web application for visualizing and analyzing biological semantic data through interactive visualizations.
-
-## Overview
-
-BioSemanticViz is a full-stack web application designed to transform complex biological data into actionable insights through semantic reasoning and interactive visualization. The application enables users to upload ontological data files (in .ttl, .rdf, or .owl formats), analyze their contents, and visualize the relationships through network graphs and phylogenetic trees.
+BioSemanticViz is a web application for visualizing and exploring biological data with semantic reasoning capabilities.
 
 ## Features
 
-- Upload and process RDF/TTL files with ontological information
-- Extract meaningful semantic relationships from biological data
-- Analyze biological data using hierarchical mapping
-- Explore biological structures through interactive visualizations
-- Visualize data as network graphs or phylogenetic trees
+- Interactive visualization of species relationships
+- Exploration of orthologous gene groups
+- Detailed gene information with GO terms and functional annotations
+- Upload and analyze biological data files
+- Semantic reasoning for biological knowledge discovery
 
-## Tech Stack
+## Backend Options
 
-### Frontend
-- React with TypeScript
-- Material-UI for UI components
-- React Router for navigation
-- Axios for API requests
+### Flask Backend (Original)
 
-### Backend
-- Flask (Python)
-- RESTful API design
-- CORS support for cross-origin requests
+The application includes a Flask backend for handling API requests. To start the application with the Flask backend:
 
-## Getting Started
+```bash
+./better_start.sh
+```
 
-### Prerequisites
-- Node.js (v14+)
-- Python (v3.8+)
-- pip
+### FastAPI Backend (New)
 
-### Installation
+A new FastAPI backend has been implemented, offering improved performance, automatic documentation, and better type validation. To start the application with the FastAPI backend:
+
+```bash
+./fastapi_start.sh
+```
+
+## API Documentation
+
+The FastAPI backend includes automatic API documentation:
+
+- Swagger UI: http://localhost:8002/docs
+- ReDoc: http://localhost:8002/redoc
+
+## Project Structure
+
+```
+.
+├── backend/
+│   ├── app/
+│   │   ├── models/               # Data models
+│   │   ├── mock_data/            # Sample data files
+│   │   ├── routes/               # API route definitions
+│   │   ├── flask_app.py          # Flask application
+│   │   └── fastapi_main.py       # FastAPI application
+│   └── test_fastapi.py           # FastAPI test script
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── components/           # React components
+│   │   ├── types/                # TypeScript type definitions
+│   │   ├── utils/                # Utility functions
+│   │   └── App.tsx               # Main application component
+│   └── package.json              # Frontend dependencies
+├── better_start.sh               # Flask startup script
+├── fastapi_start.sh              # FastAPI startup script
+└── requirements.txt              # Python dependencies
+```
+
+## Installation
 
 1. Clone the repository:
    ```bash
-git clone https://github.com/sergueigorbounov/BioSemanticViz.git
+   git clone https://github.com/yourusername/BioSemanticViz.git
    cd BioSemanticViz
    ```
 
-2. Set up the backend:
-```bash
-cd backend
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install flask flask-cors
-cd app
-```
-
-3. Set up the frontend:
+2. Install backend dependencies:
    ```bash
-cd frontend
-npm install
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   pip install -r requirements.txt
    ```
 
-### Running the Application
-
-1. Start the backend server:
+3. Install frontend dependencies:
    ```bash
-cd backend/app
-python flask_app.py
-```
+   cd frontend
+   npm install
+   ```
 
-2. Start the frontend development server:
-```bash
-cd frontend
-npm start
-```
+## Development
 
-3. Access the application at http://localhost:3000
+1. Start the backend and frontend:
+   ```bash
+   # For Flask backend
+   ./better_start.sh
+   
+   # For FastAPI backend
+   ./fastapi_start.sh
+   ```
 
-## Usage
+2. Open your browser and navigate to:
+   ```
+   http://localhost:3000
+   ```
 
-1. Upload a biological data file (.ttl, .rdf, or .owl) from the Upload page
-2. View the generated visualizations on the Visualization page
-3. Analyze data relationships on the Analysis page
-4. Switch between different visualization types as needed
+## Migrating from Flask to FastAPI
+
+If you're involved in development, here are the key differences when using the FastAPI backend:
+
+1. **Type Validation**: FastAPI uses Pydantic models for request/response validation
+2. **Documentation**: Automatic OpenAPI documentation at `/docs` and `/redoc`
+3. **Performance**: FastAPI is built on Starlette and Uvicorn for high-performance async requests
+4. **Dependency Injection**: FastAPI provides a clean way to inject dependencies into routes
+
+To convert a Flask route to FastAPI:
+- Replace Flask decorators with FastAPI equivalents
+- Add appropriate response_model annotations
+- Use Pydantic models for request/response data
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Acknowledgments
-
-- React and Material-UI for frontend development
-- Flask for backend API development 
+MIT 
