@@ -68,9 +68,8 @@ const HierarchicalBioTree: React.FC<HierarchicalBioTreeProps> = ({
       .attr('class', 'link')
       .attr('d', (d: any) => {
         return `M${d.source.y},${d.source.x}
-                C${(d.source.y + d.target.y) / 2},${d.source.x}
-                 ${(d.source.y + d.target.y) / 2},${d.target.x}
-                 ${d.target.y},${d.target.x}`;
+                L${d.source.y},${d.target.x}
+                L${d.target.y},${d.target.x}`;
       })
       .attr('fill', 'none')
       .attr('stroke', '#ccc')
