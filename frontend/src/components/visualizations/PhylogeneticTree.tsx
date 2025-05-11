@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
 import * as d3 from 'd3';
 import { Box, Typography, CircularProgress } from '@mui/material';
 
@@ -20,19 +20,7 @@ interface PhylogeneticTreeProps {
 const PhylogeneticTree: React.FC<PhylogeneticTreeProps> = ({ data, loading, error }) => {
   const svgRef = useRef<SVGSVGElement>(null);
   
-  useEffect(() => {
-    if (!data || loading || error) return;
-    
-    // Clear previous visualization
-    if (svgRef.current) {
-      d3.select(svgRef.current).selectAll('*').remove();
-    }
-    
-    // Create the tree visualization
-    renderTree(data);
-  }, [data, loading, error]);
-  
-  const renderTree = (treeData: TreeNode) => {
+  const renderTree = useCallback((treeData: TreeNode) => {
     if (!svgRef.current) return;
     
     const width = svgRef.current.clientWidth;
@@ -101,7 +89,19 @@ const PhylogeneticTree: React.FC<PhylogeneticTreeProps> = ({ data, loading, erro
       .text(d => truncateLabel(d.data.name))
       .append('title')  // Add tooltip with full name
       .text(d => d.data.name);
-  };
+  }, []);
+  
+  useEffect(() => {
+    if (!data || loading || error) return;
+    
+    // Clear previous visualization
+    if (svgRef.current) {
+      d3.select(svgRef.current).selectAll('*').remove();
+    }
+    
+    // Create the tree visualization
+    renderTree(data);
+  }, [data, loading, error, renderTree]);
   
   const getColorByType = (type?: string): string => {
     if (!type) return '#999';

@@ -1,133 +1,242 @@
 {
   "genes": [
     {
-      "id": "AT1G05010",
-      "label": "psbA",
+      "id": "ATH_G001",
+      "name": "psbA",
+      "label": "D1",
       "species_id": "ath",
       "species_name": "Arabidopsis thaliana",
       "orthogroup_id": "OG0000001",
-      "chromosome": "1",
-      "start": 1485122,
-      "end": 1486519,
-      "strand": "+",
+      "description": "Photosystem II protein D1 in Arabidopsis thaliana, encoded in the chloroplast genome.",
+      "sequence": "MTAILERRESESLWGRFCNWITSTENRLYIGWFGVLMIPTLLTATSVFIIAFIAAPPVDIDGIREPVSGS...",
+      "functions": [
+        "Light-dependent photosynthesis",
+        "Primary electron donor in PSII",
+        "Binding site for quinones and herbicides"
+      ],
       "go_terms": [
+        {
+          "id": "GO:0009523",
+          "name": "photosystem II",
+          "category": "cellular_component"
+        },
         {
           "id": "GO:0009535",
           "name": "chloroplast thylakoid membrane",
-          "definition": "The portion of the thylakoid membrane surrounding the photosystem II complex in the chloroplast.",
-          "aspect": "C",
-          "evidence_code": "IDA"
+          "category": "cellular_component"
         },
         {
-          "id": "GO:0009539",
-          "name": "photosystem II reaction center",
-          "definition": "A protein complex that contains the D1 and D2 core proteins of photosystem II.",
-          "aspect": "C",
-          "evidence_code": "IEA"
-        },
-        {
-          "id": "GO:0015979",
-          "name": "photosynthesis",
-          "definition": "The process by which a living organism captures light energy and uses it to drive the synthesis of organic compounds.",
-          "aspect": "P",
-          "evidence_code": "IDA"
+          "id": "GO:0016168",
+          "name": "chlorophyll binding",
+          "category": "molecular_function"
         }
       ],
       "external_links": [
         {
-          "database": "TAIR",
-          "id": "AT1G05010",
-          "url": "https://www.arabidopsis.org/servlets/TairObject?id=137151&type=locus"
+          "id": "TAIR:AT5G01530",
+          "db": "TAIR",
+          "url": "https://www.arabidopsis.org/servlets/TairObject?type=locus&name=AT5G01530",
+          "name": "TAIR Gene Page"
         },
         {
-          "database": "UniProt",
-          "id": "P83755",
-          "url": "https://www.uniprot.org/uniprot/P83755"
+          "id": "UniProt:P83755",
+          "db": "UniProt",
+          "url": "https://www.uniprot.org/uniprot/P83755",
+          "name": "UniProt Entry"
         }
       ]
     },
     {
-      "id": "AT1G09570",
-      "label": "PHYA",
-      "species_id": "ath",
-      "species_name": "Arabidopsis thaliana",
-      "orthogroup_id": "OG0000002",
-      "chromosome": "1",
-      "start": 3093200,
-      "end": 3097687,
-      "strand": "-",
-      "go_terms": [
-        {
-          "id": "GO:0009584",
-          "name": "detection of visible light",
-          "definition": "The series of events in which a visible light stimulus is received by a cell and converted into a molecular signal.",
-          "aspect": "P",
-          "evidence_code": "IDA"
-        },
-        {
-          "id": "GO:0010161",
-          "name": "red light signaling pathway",
-          "definition": "A series of molecular signals initiated by the detection of red light by a photoreceptor and resulting in the activation or repression of gene expression.",
-          "aspect": "P",
-          "evidence_code": "IMP"
-        },
-        {
-          "id": "GO:0042803",
-          "name": "protein homodimerization activity",
-          "definition": "Interacting selectively and non-covalently with an identical protein to form a homodimer.",
-          "aspect": "F",
-          "evidence_code": "IPI"
-        }
-      ],
-      "external_links": [
-        {
-          "database": "TAIR",
-          "id": "AT1G09570",
-          "url": "https://www.arabidopsis.org/servlets/TairObject?id=137391&type=locus"
-        },
-        {
-          "database": "UniProt",
-          "id": "P14712",
-          "url": "https://www.uniprot.org/uniprot/P14712"
-        }
-      ]
-    },
-    {
-      "id": "OS01G0123400",
-      "label": "psbA",
+      "id": "OSA_G001",
+      "name": "psbA",
+      "label": "D1",
       "species_id": "osa",
       "species_name": "Oryza sativa",
       "orthogroup_id": "OG0000001",
-      "chromosome": "1",
-      "start": 2509876,
-      "end": 2511453,
-      "strand": "+",
+      "description": "Photosystem II protein D1 in rice, encoded in the chloroplast genome.",
+      "sequence": "MTAILERRESASLWERFCNWVTSTDNRLYVGWFGVLMIPTLLTATSVFIIAFIAAPPVDIDGIREPVSGSL...",
+      "functions": [
+        "Light-dependent photosynthesis",
+        "Primary electron donor in PSII"
+      ],
       "go_terms": [
+        {
+          "id": "GO:0009523",
+          "name": "photosystem II",
+          "category": "cellular_component"
+        },
         {
           "id": "GO:0009535",
           "name": "chloroplast thylakoid membrane",
-          "definition": "The portion of the thylakoid membrane surrounding the photosystem II complex in the chloroplast.",
-          "aspect": "C",
-          "evidence_code": "IEA"
-        },
-        {
-          "id": "GO:0015979",
-          "name": "photosynthesis",
-          "definition": "The process by which a living organism captures light energy and uses it to drive the synthesis of organic compounds.",
-          "aspect": "P",
-          "evidence_code": "IEA"
+          "category": "cellular_component"
         }
       ],
       "external_links": [
         {
-          "database": "RAP-DB",
-          "id": "OS01G0123400",
-          "url": "https://rapdb.dna.affrc.go.jp/viewer/gbrowse_details/irgsp1?name=OS01G0123400"
+          "id": "RAP-DB:Os01g0175000",
+          "db": "RAP-DB",
+          "url": "https://rapdb.dna.affrc.go.jp/viewer/gbrowse_details/irgsp1?name=Os01g0175000",
+          "name": "Rice Annotation Project Database"
+        }
+      ]
+    },
+    {
+      "id": "ATH_G002",
+      "name": "rbcL",
+      "label": "RbcL",
+      "species_id": "ath",
+      "species_name": "Arabidopsis thaliana",
+      "orthogroup_id": "OG0000002",
+      "description": "Ribulose bisphosphate carboxylase large chain (RuBisCO), the primary carbon fixation enzyme.",
+      "sequence": "MSPQTETKASVGFKAGVKEYKLTYYTPEYETKDTDILAAFRVTPQPGVPPEEAGAAVAAESSTGTWTTVWTDGLTSLDRYKGRCYHIEPVAGE...",
+      "functions": [
+        "Carbon fixation",
+        "Photorespiration",
+        "Primary enzyme in Calvin cycle"
+      ],
+      "go_terms": [
+        {
+          "id": "GO:0016984",
+          "name": "ribulose-bisphosphate carboxylase activity",
+          "category": "molecular_function"
         },
         {
-          "database": "UniProt",
-          "id": "P0C434",
-          "url": "https://www.uniprot.org/uniprot/P0C434"
+          "id": "GO:0009507",
+          "name": "chloroplast",
+          "category": "cellular_component"
+        },
+        {
+          "id": "GO:0015977",
+          "name": "carbon fixation",
+          "category": "biological_process"
+        }
+      ],
+      "external_links": [
+        {
+          "id": "TAIR:ATCG00490",
+          "db": "TAIR",
+          "url": "https://www.arabidopsis.org/servlets/TairObject?type=locus&name=ATCG00490",
+          "name": "TAIR Gene Page"
+        }
+      ]
+    },
+    {
+      "id": "SLY_G003",
+      "name": "HSP70",
+      "label": "SlHSP70",
+      "species_id": "sly",
+      "species_name": "Solanum lycopersicum",
+      "orthogroup_id": "OG0000003",
+      "description": "Heat shock protein 70 in tomato, involved in response to heat and other stresses.",
+      "sequence": "MSGKGEGPAIGIDLGTTYSCVGVWQNERVEIIANDQGNRTTPSYVAFTDTERLIGDAAKNQVALNPQNTVFDAKRLIGRKFGDPVVQSDMKHWPFQVVNDGDKPKVQVSYKGDTKAFYPEEISSMVLTKMKEIAEAYLGHPVTNAVITVPAYFNDSQRQATKDAGVIAGLNVLRIINEPTAAAIAYGLDRTGKGERNVLIFDLGGGTFDVSILTIDDGIFEVKATAGDTHLGGEDFDNRLVSHFVEEFKRKHKKDISQNKRAVRRLRTACERAKRTLSSSTQASIEIDSLFEGIDFYTSITRARFEELCSDLFRSTLEPVEKALRDAKMDKAQIHDLVLVGGSTRIPKVQKLLQDFFNGRDLNKSINPDEAVAYGAAVQAAILMGDKSENVQDLLLLDVAPLSLGLETAGGVMTALIKRNTTIPTKQTQIFTTYSDNQPGVLIQVYEGERAMTKDNNLLGRFELSGIPPAPRGVPQIEVTFDIDANGILNVTATDKSTGKANKITITNDKGRLSKEEIERMVQEAEKYKAEDEAQRERVAAKNALESYAFNMKSAVEDEGLKGKISEADKKKVIEKCNETIMWLDANQLAEKEEFVHKREELERVCSPIISGLYQGAGGPGPGGFGAQGPKGGSGSGPTIEEVD",
+      "functions": [
+        "Molecular chaperone",
+        "Heat stress response",
+        "Protein folding facilitation"
+      ],
+      "go_terms": [
+        {
+          "id": "GO:0005524",
+          "name": "ATP binding",
+          "category": "molecular_function"
+        },
+        {
+          "id": "GO:0006457",
+          "name": "protein folding",
+          "category": "biological_process"
+        },
+        {
+          "id": "GO:0009408",
+          "name": "response to heat",
+          "category": "biological_process"
+        }
+      ],
+      "external_links": [
+        {
+          "id": "SGN:Solyc06g076020",
+          "db": "SGN",
+          "url": "https://solgenomics.net/locus/32553/view",
+          "name": "Sol Genomics Network"
+        }
+      ]
+    },
+    {
+      "id": "ZMA_G004",
+      "name": "phyB",
+      "label": "ZmPHYB",
+      "species_id": "zma",
+      "species_name": "Zea mays",
+      "orthogroup_id": "OG0000004",
+      "description": "Phytochrome B in maize, a photoreceptor that regulates plant development in response to light.",
+      "sequence": "MVSGSSRPSSSSSPVRPSSHSQSRPSSLLFLHSHAVSATVRPASSSSSSSSLGRYLHEDIEHGGSGGSSSSGVIQGFEFLMSLAASFSSALALTMSPYLGFPFARFPGVSDGTSLSFHYASQSISGSYCFFLQDELTSSRSLSPSEQMAVTSRIFFDNSFRSILSRSGDIKPITVMTVDPSLVVRVKEKVEEHNIKRISGLVYADITLRVIQLQEQDLQIMSMQGRKLYVLDMVPDSIERIKNRSFIEVTEMAEGLYGEKISLDIVRPEHTLLIKNLMSTSGKVASFSLDCILPSFFSCNVRNACMHLLSQRACLKGVSSCWKGSESRKSKDFKIFTFLAFEVMERDKDQKLGLLVDINITHLLLNVSAFLVIYENKNPSLFNPSADFVSEAFSLFAKHAGSLVSCGGTLVYIEFKGKTLEDTFRAIYSKLKRGIYAIFQFQNKDGSKSIINLLMRVPQLLVPSFLSKMDESLLPWTHYTGQDLSVFDIWKGPDGNKVIAYDRRLTELGFDSSGMAVMLRMSAKFQTFWRNPDVPASIVSQGFDDYQVLQLQSEVENYLLGAKEVTDNWELLMDPHYTPQIEDDNHEQYTEWEKMYGRIQSKFIKPSAITDLKEHFPLFLQFKDAEVKWLRWQKSSGFIPLNGFTRMEKVVPRDHIVDLASSEICSSGLGEPVAFVLEEPSYFISYIQTLRIRQTKGGQVRTALMCTASNIPERQILETAIAKLEKEINWCRKFQDGLYLIPTFADKRNNILQLAQGSGPFELADFAKRVHEAYLTGVGVRQPKGYWLGFTSTLRETIPVRNYFVVGVAADILVRKYVRKNNFDIHPRLSIHRFIIRHHTALQLIGGDPRKVVELMGKGQCQAICRQRLALELRNPPTCSEMSALQHVWNNEYRRFRYSRPWNKIVDAKKFVEEFRRRLNGLFQWEKRAESTKKGVLRKSMDELNLGYHHDTDLTLLGFGEKAADCSNNDLRQAFYFKKSYIDSKFIQDLIKKRNEIDKSRSIEKVLTDDDSVVLLKDLFYGKQEGPLTLISRSELVNQALGMMQEHLKTCQRVNLYSGHETSKVLICCRLPTGCGSEIVACRLLESCGHDFVHHKIIRKVQEENENLRKKAQEILGFPLLVTPQNKEKYRFCGIIFDPSTGELADWDRVQEFLFYYMSSGHLNSFHFTLRSYIPVTPVEEVGKMRKGSSKELLRFLSDVLPCSVQVKTIYVSDNGIRVTTIVNPIYEKKDTSPAQLIVKQGQLGEVFDFQQRQRLLGLQEKENLCVSHLVFDYPKKLSLPEYVRAFKDAIRKAEEETGERKMSSASIRKGTWVRLRPGRVLILNDEHQRLDAFLSRTVADKLAQAGVVFLLGGESEKEILEAFKLFLKDFVGGFSRLPPQSLLTEHKAGHQGFLFIDFLSLVDRVLPFLQEKEPLDVFEIGVNHPPDLSALKPGEKVMVGQVFYVMGKLLLFGTDGHETILKILESVPNAFERMQSYGPMELYVPNTAFTVDSSQTTRLDRVTFAAEPQNIILKYNTNPHQGVWDLEEAACDLLLGAHSRVDQMRLMTVMGTGLQFLLQKPPERPILQILKTLSRLMHHQIPHSLIPAFLSRLHQSSGESVVTIKTAENASQLGYHFKIVWPPTAVPFENLCFDILTEEMEQTAALIRRKNMKDLLKDMVAEKMKGHLKEVSQLSVRDLPDAGSIFKFGEVGYEAVAEILGRYLESVIPKDGVKRVLFLRDSEKFQGFLLYAADPFLTKVWDHGIVLKEQVSFTAR",
+      "functions": [
+        "Red/far-red light perception",
+        "Regulation of flowering time",
+        "Shade avoidance responses"
+      ],
+      "go_terms": [
+        {
+          "id": "GO:0010161",
+          "name": "red light signaling pathway",
+          "category": "biological_process"
+        },
+        {
+          "id": "GO:0009585",
+          "name": "red, far-red light phototransduction",
+          "category": "biological_process"
+        },
+        {
+          "id": "GO:0010017",
+          "name": "red or far-red light signaling pathway",
+          "category": "biological_process"
+        }
+      ],
+      "external_links": [
+        {
+          "id": "MaizeGDB:GRMZM2G092174",
+          "db": "MaizeGDB",
+          "url": "https://www.maizegdb.org/gene_center/gene/GRMZM2G092174",
+          "name": "Maize Genetics and Genomics Database"
+        }
+      ]
+    },
+    {
+      "id": "STU_G005",
+      "name": "AGL20",
+      "label": "StMADS",
+      "species_id": "stu",
+      "species_name": "Solanum tuberosum",
+      "orthogroup_id": "OG0000005",
+      "description": "MADS-box transcription factor involved in flowering regulation in potato.",
+      "sequence": "MGRGKIEIKRIENTTNRQVTYSKRRNGLFKKAHELSVLCDAEVALIIFSSTGKLYDYASSSSMKEIERHQRNYMDQLNERLDLSDLNLHELRQIKGEDISNLKKEIQMLQKKQMLGFQEEQQQQNNMLHMNAFYGPAAQPQPHPGQFNLPPWMLRTVPAQQPAYMLPNHIQPSYTQQGYQNTSL",
+      "functions": [
+        "Floral development regulation",
+        "Flowering time control",
+        "Tuber development regulation"
+      ],
+      "go_terms": [
+        {
+          "id": "GO:0003700",
+          "name": "DNA-binding transcription factor activity",
+          "category": "molecular_function"
+        },
+        {
+          "id": "GO:0006355",
+          "name": "regulation of transcription, DNA-templated",
+          "category": "biological_process"
+        },
+        {
+          "id": "GO:0046983",
+          "name": "protein dimerization activity",
+          "category": "molecular_function"
+        }
+      ],
+      "external_links": [
+        {
+          "id": "SpudDB:PGSC0003DMG400000584",
+          "db": "SpudDB",
+          "url": "http://solanaceae.plantbiology.msu.edu/cgi-bin/annotation_dbs/get_gene_info.cgi?model=PGSC0003DMG400000584",
+          "name": "Potato Genomics Resource"
         }
       ]
     }

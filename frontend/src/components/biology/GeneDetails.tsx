@@ -7,10 +7,9 @@ import {
   ListItem, 
   ListItemText, 
   Divider, 
-  Chip, 
-  CircularProgress 
+  Chip
 } from '@mui/material';
-import { Gene } from '../../types/biology';
+import { Gene, GoTerm, Orthogroup, ExternalLink } from '../../types/biology';
 
 interface GeneDetailsProps {
   gene: Gene | null;
@@ -33,23 +32,24 @@ const GeneDetails: React.FC<GeneDetailsProps> = ({ gene }) => {
   const {
     id,
     name,
-    symbol,
-    species,
+    label,
+    species_id,
+    species_name,
     description,
     sequence,
     functions = [],
-    goTerms = [],
-    orthogroups = [],
+    go_terms = [],
+    external_links = [],
   } = gene;
 
   return (
     <Paper sx={{ p: 3, height: '600px', overflow: 'auto' }}>
       <Typography variant="h5" gutterBottom>
-        {symbol || name}
+        {label || name || id}
       </Typography>
       
       <Typography variant="subtitle1" color="textSecondary" gutterBottom>
-        {id} • {species}
+        {id} • {species_name || species_id}
       </Typography>
       
       {description && (
@@ -63,13 +63,13 @@ const GeneDetails: React.FC<GeneDetailsProps> = ({ gene }) => {
         </Box>
       )}
       
-      {functions.length > 0 && (
+      {functions && functions.length > 0 && (
         <Box sx={{ mb: 3 }}>
           <Typography variant="h6" gutterBottom>
             Functions
           </Typography>
           <List disablePadding>
-            {functions.map((func, index) => (
+            {functions.map((func: string, index: number) => (
               <React.Fragment key={index}>
                 {index > 0 && <Divider component="li" />}
                 <ListItem disablePadding sx={{ py: 1 }}>
@@ -81,19 +81,19 @@ const GeneDetails: React.FC<GeneDetailsProps> = ({ gene }) => {
         </Box>
       )}
       
-      {goTerms.length > 0 && (
+      {go_terms && go_terms.length > 0 && (
         <Box sx={{ mb: 3 }}>
           <Typography variant="h6" gutterBottom>
             GO Terms
           </Typography>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
-            {goTerms.map((term, index) => (
+            {go_terms.map((term: GoTerm, index: number) => (
               <Chip 
                 key={index} 
                 label={term.id} 
                 size="small" 
-                color={term.category === 'biological_process' ? 'success' : 
-                       term.category === 'molecular_function' ? 'primary' : 
+                color={term.aspect === 'P' ? 'success' : 
+                       term.aspect === 'F' ? 'primary' : 
                        'secondary'} 
                 title={term.name}
               />
@@ -102,19 +102,23 @@ const GeneDetails: React.FC<GeneDetailsProps> = ({ gene }) => {
         </Box>
       )}
       
-      {orthogroups.length > 0 && (
+      {external_links && external_links.length > 0 && (
         <Box sx={{ mb: 3 }}>
           <Typography variant="h6" gutterBottom>
-            Orthogroups
+            External Links
           </Typography>
           <List disablePadding>
-            {orthogroups.map((orthogroup, index) => (
+            {external_links.map((link: ExternalLink, index: number) => (
               <React.Fragment key={index}>
                 {index > 0 && <Divider component="li" />}
                 <ListItem disablePadding sx={{ py: 1 }}>
                   <ListItemText 
-                    primary={orthogroup.id} 
-                    secondary={`${orthogroup.species_count} species, ${orthogroup.gene_count} genes`} 
+                    primary={link.database} 
+                    secondary={
+                      <a href={link.url} target="_blank" rel="noopener noreferrer">
+                        {link.id}
+                      </a>
+                    } 
                   />
                 </ListItem>
               </React.Fragment>

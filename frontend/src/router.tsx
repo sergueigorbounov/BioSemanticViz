@@ -7,6 +7,7 @@ import NotFoundPage from './components/pages/NotFoundPage';
 import AnalysisPage from './components/pages/AnalysisPage';
 import BiologyHierarchyPage from './components/pages/BiologyHierarchyPage';
 import BiologicalExplorer from './components/pages/BiologicalExplorer';
+import BioDashboard from './components/pages/BioDashboard';
 import App from './App';
 
 // Opt into future React Router behaviors
@@ -26,6 +27,7 @@ export const router = createBrowserRouter(
       <Route path="analysis/:id" element={<AnalysisPage />} />
       <Route path="biology" element={<BiologyHierarchyPage />} />
       <Route path="explorer" element={<BiologicalExplorer />} />
+      <Route path="dashboard" element={<BioDashboard />} />
       <Route path="*" element={<NotFoundPage />} />
     </Route>
   ),

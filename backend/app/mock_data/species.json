@@ -3,37 +3,37 @@
     {
       "id": "ath",
       "name": "Arabidopsis thaliana",
-      "taxon_id": "3702",
-      "common_name": "thale cress",
-      "genome_assembly": "TAIR10"
+      "common_name": "Thale cress",
+      "taxonomy_id": "3702",
+      "description": "A small flowering plant that is widely used as a model organism in plant biology."
     },
     {
       "id": "osa",
       "name": "Oryza sativa",
-      "taxon_id": "39947",
-      "common_name": "rice",
-      "genome_assembly": "IRGSP-1.0"
+      "common_name": "Rice",
+      "taxonomy_id": "4530",
+      "description": "A cereal grain that is the most widely consumed staple food for a large part of the world's human population."
     },
     {
       "id": "zma",
       "name": "Zea mays",
-      "taxon_id": "4577",
-      "common_name": "maize",
-      "genome_assembly": "B73_RefGen_v4"
+      "common_name": "Maize/Corn",
+      "taxonomy_id": "4577",
+      "description": "A cereal grain first domesticated by indigenous peoples in southern Mexico about 10,000 years ago."
     },
     {
       "id": "sly",
       "name": "Solanum lycopersicum",
-      "taxon_id": "4081",
-      "common_name": "tomato",
-      "genome_assembly": "SL3.0"
+      "common_name": "Tomato",
+      "taxonomy_id": "4081",
+      "description": "The tomato is the edible berry of the plant Solanum lycopersicum, commonly known as a tomato plant."
     },
     {
-      "id": "gma",
-      "name": "Glycine max",
-      "taxon_id": "3847",
-      "common_name": "soybean",
-      "genome_assembly": "Wm82.a2.v1"
+      "id": "stu",
+      "name": "Solanum tuberosum",
+      "common_name": "Potato",
+      "taxonomy_id": "4113",
+      "description": "The potato is a starchy tuber of the plant Solanum tuberosum and is a root vegetable native to the Americas."
     }
   ]
 } 

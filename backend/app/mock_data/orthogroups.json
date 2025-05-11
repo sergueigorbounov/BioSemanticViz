@@ -4,36 +4,36 @@
       "id": "OG0000001",
       "name": "Photosystem II protein D1",
       "species": ["ath", "osa", "zma"],
-      "genes": ["AT1G05010", "OS01G0123400", "GRMZM2G321533"],
-      "description": "Core protein of photosystem II"
+      "genes": ["ATH_G001", "OSA_G001", "ZMA_G001"],
+      "description": "Core protein of photosystem II, responsible for the primary light-dependent charge separation in photosynthesis."
     },
     {
       "id": "OG0000002",
-      "name": "Phytochrome family",
-      "species": ["ath", "osa", "zma", "sly"],
-      "genes": ["AT1G09570", "AT2G18790", "OS03G0719800", "GRMZM2G124532", "Solyc09g014520"],
-      "description": "Red/far-red light photoreceptors"
+      "name": "Rubisco large subunit",
+      "species": ["ath", "osa", "zma", "sly", "stu"],
+      "genes": ["ATH_G002", "OSA_G002", "ZMA_G002", "SLY_G002", "STU_G002"],
+      "description": "Large subunit of ribulose-1,5-bisphosphate carboxylase/oxygenase (Rubisco), the key enzyme in photosynthetic carbon fixation."
     },
     {
       "id": "OG0000003",
-      "name": "Rubisco small subunit",
-      "species": ["ath", "osa", "zma", "sly", "gma"],
-      "genes": ["AT1G67090", "AT5G38430", "OS12G0274700", "GRMZM2G098520", "Solyc02g085950", "GLYMA_19G076400"],
-      "description": "RuBisCO small subunit"
+      "name": "Heat shock protein 70",
+      "species": ["ath", "osa", "sly"],
+      "genes": ["ATH_G003", "OSA_G003", "SLY_G003"],
+      "description": "Molecular chaperone that assists in protein folding and protects cells from heat stress."
     },
     {
       "id": "OG0000004",
-      "name": "MADS box transcription factors",
-      "species": ["ath", "osa"],
-      "genes": ["AT5G20240", "OS01G0883100", "OS05G0423400"],
-      "description": "Floral homeotic proteins"
+      "name": "Phytochrome B",
+      "species": ["ath", "zma"],
+      "genes": ["ATH_G004", "ZMA_G004"],
+      "description": "Light-sensitive receptor involved in red/far-red light perception and regulation of plant development."
     },
     {
       "id": "OG0000005",
-      "name": "Cellulose synthase",
-      "species": ["ath", "osa", "gma"],
-      "genes": ["AT4G32410", "AT5G44030", "OS01G0750300", "GLYMA_10G037200"],
-      "description": "Cellulose biosynthesis"
+      "name": "MADS-box transcription factor",
+      "species": ["ath", "osa", "sly", "stu"],
+      "genes": ["ATH_G005", "OSA_G005", "SLY_G005", "STU_G005"],
+      "description": "Transcription factor family involved in flower development and other developmental processes."
     }
   ]
 } 

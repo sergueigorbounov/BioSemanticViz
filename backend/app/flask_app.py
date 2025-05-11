@@ -6,6 +6,7 @@ import json
 import pandas as pd
 import numpy as np
 from routes.biological_data import bio_bp
+from routes.dashboard_data import dashboard_bp
 import argparse
 import sys
 
@@ -25,6 +26,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # Register blueprints
 app.register_blueprint(bio_bp, url_prefix='/api')
+app.register_blueprint(dashboard_bp)
 
 # Create a route mapper for FastAPI routes
 def fastapi_route_to_flask(fastapi_router):

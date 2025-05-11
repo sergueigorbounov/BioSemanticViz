@@ -41,6 +41,31 @@ class Gene(BaseModel):
     go_terms: List[GoTerm] = []
     external_links: List[ExternalLink] = []
 
+# Dashboard models
+class NameValuePair(BaseModel):
+    name: str
+    value: int
+
+class GeneByOrthogroup(BaseModel):
+    name: str
+    genes: int
+
+class DashboardData(BaseModel):
+    speciesCount: int
+    orthogroupCount: int
+    geneCount: int
+    annotationCount: int
+    speciesDistribution: List[NameValuePair] = []
+    genesByOrthogroup: List[GeneByOrthogroup] = []
+    orthogroupConnectivity: List[NameValuePair] = []
+    taxonomyDistribution: List[NameValuePair] = []
+    goTermDistribution: Dict[str, int] = {}
+
+class DashboardResponse(BaseModel):
+    success: bool
+    data: Optional[DashboardData] = None
+    message: Optional[str] = None
+
 # Forward reference for recursive model
 SpeciesTreeNodeRef = ForwardRef('SpeciesTreeNode')
 

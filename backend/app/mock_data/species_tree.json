@@ -1,114 +1,76 @@
 {
   "id": "root",
-  "name": "Eukaryota",
-  "type": "species",
+  "name": "Plants",
+  "scientific_name": "Plantae",
   "children": [
     {
-      "id": "plants",
-      "name": "Plantae",
-      "type": "species",
+      "id": "flowering_plants",
+      "name": "Flowering Plants",
+      "scientific_name": "Angiosperms",
       "children": [
         {
-          "id": "ath",
-          "name": "Arabidopsis thaliana",
-          "type": "species",
+          "id": "monocots",
+          "name": "Monocots",
+          "scientific_name": "Monocotyledoneae",
           "children": [
             {
-              "id": "OG0000001",
-              "name": "Photosystem II protein D1",
-              "type": "orthogroup"
+              "id": "osa",
+              "name": "Rice",
+              "scientific_name": "Oryza sativa",
+              "common_name": "Rice",
+              "taxonomy_id": 4530,
+              "type": "species"
             },
             {
-              "id": "OG0000002",
-              "name": "Phytochrome family",
-              "type": "orthogroup"
-            },
-            {
-              "id": "OG0000003",
-              "name": "Rubisco small subunit",
-              "type": "orthogroup"
+              "id": "zma",
+              "name": "Maize",
+              "scientific_name": "Zea mays",
+              "common_name": "Corn",
+              "taxonomy_id": 4577,
+              "type": "species"
             }
           ]
         },
         {
-          "id": "osa",
-          "name": "Oryza sativa",
-          "type": "species",
+          "id": "dicots",
+          "name": "Dicots",
+          "scientific_name": "Dicotyledoneae",
           "children": [
             {
-              "id": "OG0000001",
-              "name": "Photosystem II protein D1",
-              "type": "orthogroup"
+              "id": "brassicaceae",
+              "name": "Brassicaceae",
+              "children": [
+                {
+                  "id": "ath",
+                  "name": "Arabidopsis",
+                  "scientific_name": "Arabidopsis thaliana",
+                  "common_name": "Thale cress",
+                  "taxonomy_id": 3702,
+                  "type": "species"
+                }
+              ]
             },
             {
-              "id": "OG0000004",
-              "name": "MADS box transcription factors",
-              "type": "orthogroup"
-            }
-          ]
-        },
-        {
-          "id": "zma",
-          "name": "Zea mays",
-          "type": "species",
-          "children": [
-            {
-              "id": "OG0000002",
-              "name": "Phytochrome family",
-              "type": "orthogroup"
-            },
-            {
-              "id": "OG0000003",
-              "name": "Rubisco small subunit",
-              "type": "orthogroup"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "legumes",
-      "name": "Fabaceae",
-      "type": "species",
-      "children": [
-        {
-          "id": "gma",
-          "name": "Glycine max",
-          "type": "species",
-          "children": [
-            {
-              "id": "OG0000003",
-              "name": "Rubisco small subunit",
-              "type": "orthogroup"
-            },
-            {
-              "id": "OG0000005",
-              "name": "Cellulose synthase",
-              "type": "orthogroup"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "id": "nightshades",
-      "name": "Solanaceae",
-      "type": "species",
-      "children": [
-        {
-          "id": "sly",
-          "name": "Solanum lycopersicum",
-          "type": "species",
-          "children": [
-            {
-              "id": "OG0000002",
-              "name": "Phytochrome family",
-              "type": "orthogroup"
-            },
-            {
-              "id": "OG0000003",
-              "name": "Rubisco small subunit",
-              "type": "orthogroup"
+              "id": "solanaceae",
+              "name": "Solanaceae",
+              "children": [
+                {
+                  "id": "sly",
+                  "name": "Tomato",
+                  "scientific_name": "Solanum lycopersicum",
+                  "common_name": "Tomato",
+                  "taxonomy_id": 4081,
+                  "type": "species"
+                },
+                {
+                  "id": "stu",
+                  "name": "Potato",
+                  "scientific_name": "Solanum tuberosum",
+                  "common_name": "Potato",
+                  "taxonomy_id": 4113,
+                  "type": "species"
+                }
+              ]
             }
           ]
         }

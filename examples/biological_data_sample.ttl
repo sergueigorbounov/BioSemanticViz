@@ -1,0 +1,267 @@
+# biological_data_sample.ttl
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix dc: <http://purl.org/dc/terms/> .
+@prefix ncbi: <http://purl.obolibrary.org/obo/NCBITaxon_> .
+@prefix go: <http://purl.obolibrary.org/obo/GO_> .
+@prefix po: <http://purl.obolibrary.org/obo/PO_> .
+@prefix to: <http://purl.obolibrary.org/obo/TO_> .
+@prefix gene: <http://biosemantic.org/gene/> .
+@prefix og: <http://biosemantic.org/orthogroup/> .
+@prefix species: <http://biosemantic.org/species/> .
+@prefix xref: <http://biosemantic.org/xref/> .
+
+# Define namespaces
+<http://biosemantic.org/ontology> rdf:type owl:Ontology ;
+    rdfs:label "BioSemanticViz Sample Data" ;
+    owl:versionInfo "1.0" ;
+    dc:description "Sample biological data for BioSemanticViz platform" .
+
+# Species hierarchy
+species:Eukaryota rdf:type ncbi:Species ;
+    rdfs:label "Eukaryotes" ;
+    ncbi:tax_id "2759" ;
+    ncbi:rank "superkingdom" .
+
+species:Plantae rdf:type ncbi:Species ;
+    rdfs:label "Plants" ;
+    ncbi:tax_id "33090" ;
+    ncbi:rank "kingdom" ;
+    ncbi:hasParent species:Eukaryota .
+
+species:Animalia rdf:type ncbi:Species ;
+    rdfs:label "Animals" ;
+    ncbi:tax_id "33208" ;
+    ncbi:rank "kingdom" ;
+    ncbi:hasParent species:Eukaryota .
+
+species:Homo_sapiens rdf:type ncbi:Species ;
+    rdfs:label "Homo sapiens" ;
+    rdfs:comment "Human" ;
+    ncbi:tax_id "9606" ;
+    ncbi:rank "species" ;
+    ncbi:hasParent species:Animalia .
+
+species:Mus_musculus rdf:type ncbi:Species ;
+    rdfs:label "Mus musculus" ;
+    rdfs:comment "House mouse" ;
+    ncbi:tax_id "10090" ;
+    ncbi:rank "species" ;
+    ncbi:hasParent species:Animalia .
+
+species:Arabidopsis_thaliana rdf:type ncbi:Species ;
+    rdfs:label "Arabidopsis thaliana" ;
+    rdfs:comment "Thale cress" ;
+    ncbi:tax_id "3702" ;
+    ncbi:rank "species" ;
+    ncbi:hasParent species:Plantae .
+
+species:Oryza_sativa rdf:type ncbi:Species ;
+    rdfs:label "Oryza sativa" ;
+    rdfs:comment "Asian cultivated rice" ;
+    ncbi:tax_id "4530" ;
+    ncbi:rank "species" ;
+    ncbi:hasParent species:Plantae .
+
+# Orthogroups
+og:OG0000001 rdf:type og:OrthoGroup ;
+    rdfs:label "Photosynthesis protein family" ;
+    dc:description "Conserved proteins involved in photosynthesis across plant species" ;
+    og:geneCount 8 ;
+    og:speciesCount 2 .
+
+og:OG0000002 rdf:type og:OrthoGroup ;
+    rdfs:label "Tumor suppressor family" ;
+    dc:description "Tumor suppressor proteins conserved in mammals" ;
+    og:geneCount 6 ;
+    og:speciesCount 2 .
+
+og:OG0000003 rdf:type og:OrthoGroup ;
+    rdfs:label "Cell cycle regulators" ;
+    dc:description "Cell cycle regulatory proteins across eukaryotes" ;
+    og:geneCount 12 ;
+    og:speciesCount 4 .
+
+# Genes
+gene:AT1G01010 rdf:type gene:Gene ;
+    rdfs:label "NAC domain protein" ;
+    dc:description "NAC transcription factor family member" ;
+    gene:geneId "AT1G01010" ;
+    gene:fromSpecies species:Arabidopsis_thaliana ;
+    gene:memberOf og:OG0000001 ;
+    gene:uri "https://www.arabidopsis.org/servlets/TairObject?type=locus&name=AT1G01010" ;
+    gene:hasGOAnnotation go:0003700, go:0006355, go:0005634 ;
+    gene:hasPOAnnotation po:0006339, po:0025161 ;
+    gene:hasTOAnnotation to:0000207 ;
+    xref:uniprot "Q94AZ2" ;
+    xref:ensembl "AT1G01010" .
+
+gene:AT2G01020 rdf:type gene:Gene ;
+    rdfs:label "Chlorophyll a/b-binding protein" ;
+    dc:description "Light-harvesting complex protein" ;
+    gene:geneId "AT2G01020" ;
+    gene:fromSpecies species:Arabidopsis_thaliana ;
+    gene:memberOf og:OG0000001 ;
+    gene:uri "https://www.arabidopsis.org/servlets/TairObject?type=locus&name=AT2G01020" ;
+    gene:hasGOAnnotation go:0015979, go:0009765, go:0009543 ;
+    gene:hasPOAnnotation po:0009025 ;
+    xref:uniprot "P04778" ;
+    xref:ensembl "AT2G01020" .
+
+gene:OS01G0100100 rdf:type gene:Gene ;
+    rdfs:label "Photosystem II reaction center protein" ;
+    dc:description "Core component of photosystem II" ;
+    gene:geneId "OS01G0100100" ;
+    gene:fromSpecies species:Oryza_sativa ;
+    gene:memberOf og:OG0000001 ;
+    gene:uri "http://rice.plantbiology.msu.edu/cgi-bin/ORF_infopage.cgi?orf=LOC_Os01g01010" ;
+    gene:hasGOAnnotation go:0015979, go:0009765 ;
+    gene:hasPOAnnotation po:0009025, po:0025034 ;
+    xref:uniprot "P59169" ;
+    xref:ensembl "Os01g0100100" .
+
+gene:BRCA1 rdf:type gene:Gene ;
+    rdfs:label "BRCA1" ;
+    dc:description "Breast cancer 1 early onset" ;
+    gene:geneId "BRCA1" ;
+    gene:fromSpecies species:Homo_sapiens ;
+    gene:memberOf og:OG0000002 ;
+    gene:uri "https://www.ncbi.nlm.nih.gov/gene/672" ;
+    gene:hasGOAnnotation go:0004842, go:0006281, go:0005634 ;
+    gene:hasTOAnnotation to:0000480 ;
+    xref:uniprot "P38398" ;
+    xref:ncbi "672" ;
+    xref:ensembl "ENSG00000012048" .
+
+gene:BRCA2 rdf:type gene:Gene ;
+    rdfs:label "BRCA2" ;
+    dc:description "Breast cancer 2 early onset" ;
+    gene:geneId "BRCA2" ;
+    gene:fromSpecies species:Homo_sapiens ;
+    gene:memberOf og:OG0000002 ;
+    gene:uri "https://www.ncbi.nlm.nih.gov/gene/675" ;
+    gene:hasGOAnnotation go:0003677, go:0006281, go:0005737 ;
+    gene:hasTOAnnotation to:0000480 ;
+    xref:uniprot "P51587" ;
+    xref:ncbi "675" ;
+    xref:ensembl "ENSG00000139618" .
+
+gene:Brca1_mouse rdf:type gene:Gene ;
+    rdfs:label "Brca1" ;
+    dc:description "Breast cancer 1 homolog" ;
+    gene:geneId "Brca1" ;
+    gene:fromSpecies species:Mus_musculus ;
+    gene:memberOf og:OG0000002 ;
+    gene:uri "https://www.ncbi.nlm.nih.gov/gene/12189" ;
+    gene:hasGOAnnotation go:0004842, go:0006281, go:0005634 ;
+    xref:uniprot "P48754" ;
+    xref:ncbi "12189" ;
+    xref:ensembl "ENSMUSG00000017146" .
+
+gene:CCND1 rdf:type gene:Gene ;
+    rdfs:label "Cyclin D1" ;
+    dc:description "Cell cycle regulator" ;
+    gene:geneId "CCND1" ;
+    gene:fromSpecies species:Homo_sapiens ;
+    gene:memberOf og:OG0000003 ;
+    gene:uri "https://www.ncbi.nlm.nih.gov/gene/595" ;
+    gene:hasGOAnnotation go:0005634, go:0007049, go:0051301 ;
+    xref:uniprot "P24385" ;
+    xref:ncbi "595" ;
+    xref:ensembl "ENSG00000110092" .
+
+# GO Terms (Gene Ontology)
+go:0003700 rdf:type go:MolecularFunction ;
+    rdfs:label "DNA-binding transcription factor activity" ;
+    go:definition "A protein or a member of a complex that interacts selectively and non-covalently with a specific DNA sequence in order to modulate transcription." ;
+    go:namespace "molecular_function" .
+
+go:0006355 rdf:type go:BiologicalProcess ;
+    rdfs:label "regulation of transcription, DNA-templated" ;
+    go:definition "Any process that modulates the frequency, rate or extent of cellular DNA-templated transcription." ;
+    go:namespace "biological_process" .
+
+go:0005634 rdf:type go:CellularComponent ;
+    rdfs:label "nucleus" ;
+    go:definition "A membrane-bounded organelle of eukaryotic cells in which chromosomes are housed and replicated." ;
+    go:namespace "cellular_component" .
+
+go:0015979 rdf:type go:BiologicalProcess ;
+    rdfs:label "photosynthesis" ;
+    go:definition "The synthesis by organisms of organic chemical compounds, especially carbohydrates, from carbon dioxide using energy obtained from light rather than from the oxidation of chemical compounds." ;
+    go:namespace "biological_process" .
+
+go:0004842 rdf:type go:MolecularFunction ;
+    rdfs:label "ubiquitin-protein transferase activity" ;
+    go:definition "Catalysis of the transfer of ubiquitin from one protein to another via the reaction X-Ub + Y --> Y-Ub + X." ;
+    go:namespace "molecular_function" .
+
+go:0006281 rdf:type go:BiologicalProcess ;
+    rdfs:label "DNA repair" ;
+    go:definition "The process of restoring DNA after damage." ;
+    go:namespace "biological_process" .
+
+# PO Terms (Plant Ontology)
+po:0006339 rdf:type po:PlantAnatomicalEntity ;
+    rdfs:label "juvenile vascular leaf" ;
+    po:definition "A vascular leaf (PO:0006340) that is part of a juvenile shoot system (PO:0025322)." ;
+    po:namespace "plant_anatomy" .
+
+po:0025161 rdf:type po:PlantStructureDevelopmentStage ;
+    rdfs:label "plant embryo globular stage" ;
+    po:definition "A plant embryo development stage (PO:0007631) that has a so-called globular stage as the major characteristic." ;
+    po:namespace "plant_structure_development_stage" .
+
+po:0009025 rdf:type po:PlantAnatomicalEntity ;
+    rdfs:label "vascular leaf" ;
+    po:definition "A leaf (PO:0025034) in a vascular plant." ;
+    po:namespace "plant_anatomy" .
+
+# TO Terms (Trait Ontology)
+to:0000207 rdf:type to:PlantTrait ;
+    rdfs:label "plant height" ;
+    to:definition "The vertical distance from the ground level to the uppermost point of a plant." ;
+    to:namespace "plant_trait" .
+
+to:0000480 rdf:type to:PlantTrait ;
+    rdfs:label "disease resistance" ;
+    to:definition "The ability of a plant to restrict or prevent disease development caused by a pathogen." ;
+    to:namespace "plant_trait" .
+
+# External database definitions
+xref:uniprot rdf:type owl:ObjectProperty ;
+    rdfs:label "UniProt identifier" .
+
+xref:ncbi rdf:type owl:ObjectProperty ;
+    rdfs:label "NCBI Gene identifier" .
+
+xref:ensembl rdf:type owl:ObjectProperty ;
+    rdfs:label "Ensembl identifier" .
+
+# Relationships
+ncbi:hasParent rdf:type owl:ObjectProperty ;
+    rdfs:label "has parent taxon" .
+
+gene:fromSpecies rdf:type owl:ObjectProperty ;
+    rdfs:label "from species" .
+
+gene:memberOf rdf:type owl:ObjectProperty ;
+    rdfs:label "member of orthogroup" .
+
+gene:hasGOAnnotation rdf:type owl:ObjectProperty ;
+    rdfs:label "has GO annotation" .
+
+gene:hasPOAnnotation rdf:type owl:ObjectProperty ;
+    rdfs:label "has PO annotation" .
+
+gene:hasTOAnnotation rdf:type owl:ObjectProperty ;
+    rdfs:label "has TO annotation" .
+
+og:geneCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "gene count" ;
+    rdfs:range xsd:integer .
+
+og:speciesCount rdf:type owl:DatatypeProperty ;
+    rdfs:label "species count" ;
+    rdfs:range xsd:integer .

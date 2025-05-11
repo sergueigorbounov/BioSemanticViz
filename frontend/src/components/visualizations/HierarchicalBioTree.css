@@ -1,22 +1,24 @@
 .node circle {
-  transition: r 0.3s, fill 0.3s;
+  transition: r 0.3s, fill 0.3s, stroke 0.3s, stroke-width 0.3s;
 }
 
 .node:hover circle {
   r: 10;
+  filter: brightness(1.2);
 }
 
 .node text {
-  transition: font-size 0.3s;
+  transition: font-size 0.3s, font-weight 0.3s, fill 0.3s;
 }
 
 .node:hover text {
   font-size: 14px;
   font-weight: bold;
+  fill: #000;
 }
 
 .link {
-  transition: stroke-width 0.3s;
+  transition: stroke-width 0.3s, stroke 0.3s, opacity 0.3s;
 }
 
 .link:hover {
@@ -29,9 +31,28 @@
   stroke-width: 2px;
 }
 
+.node.search-match circle {
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    stroke-width: 2px;
+    stroke-opacity: 1;
+  }
+  50% {
+    stroke-width: 4px;
+    stroke-opacity: 0.8;
+  }
+  100% {
+    stroke-width: 2px;
+    stroke-opacity: 1;
+  }
+}
+
 .tooltip {
   position: absolute;
-  text-align: center;
+  text-align: left;
   padding: 8px;
   font: 12px sans-serif;
   background: white;
@@ -40,4 +61,32 @@
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.2s;
+  line-height: 1.5;
+  max-width: 300px;
+}
+
+/* Controls styling */
+.controls {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 4px;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+}
+
+.controls button {
+  margin: 2px;
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  background-color: white;
+  cursor: pointer;
+  border-radius: 3px;
+}
+
+.controls button:hover {
+  background-color: #f0f0f0;
 } 

@@ -16,6 +16,7 @@ const navLinks = [
   { name: 'Upload', path: '/upload' },
   { name: 'Biology', path: '/biology' },
   { name: 'Explorer', path: '/explorer' },
+  { name: 'Dashboard', path: '/dashboard' },
 ];
 
 const Header: React.FC = () => {
