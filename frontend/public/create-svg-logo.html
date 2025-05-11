@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create SVG Logo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 20px;
+    }
+    .logo-container {
+      margin: 20px 0;
+      text-align: center;
+    }
+    button {
+      padding: 10px 15px;
+      margin: 10px;
+      cursor: pointer;
+    }
+    textarea {
+      width: 100%;
+      height: 100px;
+      margin: 10px 0;
+    }
+    svg {
+      border: 1px solid #ddd;
+    }
+  </style>
+</head>
+<body>
+  <h1>SVG Logo Generator</h1>
+  
+  <div class="logo-container">
+    <svg id="logo" width="192" height="192" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#2196f3;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#1976d2;stop-opacity:1" />
+        </linearGradient>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#grad)" />
+      <text x="50%" y="50%" font-family="Arial" font-size="60" font-weight="bold" 
+            text-anchor="middle" fill="white" dominant-baseline="middle">BSV</text>
+    </svg>
+  </div>
+  
+  <div>
+    <h2>Instructions:</h2>
+    <ol>
+      <li>Right-click on the logo above and select "Save Image As..." to save as an SVG file</li>
+      <li>Use an online converter to convert the SVG to PNG format for favicon.ico, logo192.png, and logo512.png</li>
+      <li>Place the converted files in the public directory</li>
+    </ol>
+  </div>
+  
+  <div>
+    <h3>SVG Code:</h3>
+    <textarea id="svg-code" readonly></textarea>
+    <button onclick="copyToClipboard()">Copy SVG Code</button>
+  </div>
+  
+  <script>
+    // Display the SVG code in the textarea
+    document.getElementById('svg-code').value = document.getElementById('logo').outerHTML;
+    
+    // Copy to clipboard function
+    function copyToClipboard() {
+      const svgCode = document.getElementById('svg-code');
+      svgCode.select();
+      document.execCommand('copy');
+      alert('SVG code copied to clipboard!');
+    }
+  </script>
+</body>
+</html> 

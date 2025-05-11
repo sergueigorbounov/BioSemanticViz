@@ -1,0 +1,110 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix obo: <http://purl.obolibrary.org/obo/> .
+@prefix go: <http://purl.obolibrary.org/obo/go#> .
+
+<http://purl.obolibrary.org/obo/go.owl> rdf:type owl:Ontology ;
+    rdfs:label "Gene Ontology (Subset)" ;
+    owl:versionInfo "2023-demo-subset" .
+
+# Biological Process terms
+obo:GO_0008150 rdf:type owl:Class ;
+    rdfs:label "biological process" ;
+    rdfs:comment "A biological process represents a specific objective that the organism is genetically programmed to achieve." .
+
+obo:GO_0009987 rdf:type owl:Class ;
+    rdfs:label "cellular process" ;
+    rdfs:subClassOf obo:GO_0008150 ;
+    rdfs:comment "Any process that is carried out at the cellular level, but not necessarily restricted to a single cell." .
+
+obo:GO_0022402 rdf:type owl:Class ;
+    rdfs:label "cell cycle process" ;
+    rdfs:subClassOf obo:GO_0009987 ;
+    rdfs:comment "A process that is carried out at the cellular level that is involved in the progression of the cell cycle." .
+
+obo:GO_0007049 rdf:type owl:Class ;
+    rdfs:label "cell cycle" ;
+    rdfs:subClassOf obo:GO_0009987 ;
+    rdfs:comment "The progression of biochemical and morphological phases and events that occur in a cell during successive cell replication." .
+
+# Molecular Function terms
+obo:GO_0003674 rdf:type owl:Class ;
+    rdfs:label "molecular function" ;
+    rdfs:comment "An elemental activity, such as catalysis or binding, describing the actions of a gene product." .
+
+obo:GO_0003824 rdf:type owl:Class ;
+    rdfs:label "catalytic activity" ;
+    rdfs:subClassOf obo:GO_0003674 ;
+    rdfs:comment "Catalysis of a biochemical reaction at physiological temperatures." .
+
+obo:GO_0016787 rdf:type owl:Class ;
+    rdfs:label "hydrolase activity" ;
+    rdfs:subClassOf obo:GO_0003824 ;
+    rdfs:comment "Catalysis of the hydrolysis of various bonds." .
+
+obo:GO_0016740 rdf:type owl:Class ;
+    rdfs:label "transferase activity" ;
+    rdfs:subClassOf obo:GO_0003824 ;
+    rdfs:comment "Catalysis of the transfer of a group, e.g. a methyl group, glycosyl group, acyl group, phosphorus-containing, or other groups, from one compound to another." .
+
+# Cellular Component terms
+obo:GO_0005575 rdf:type owl:Class ;
+    rdfs:label "cellular component" ;
+    rdfs:comment "A location, relative to cellular compartments and structures, occupied by a macromolecular machine when it carries out a molecular function." .
+
+obo:GO_0005622 rdf:type owl:Class ;
+    rdfs:label "intracellular" ;
+    rdfs:subClassOf obo:GO_0005575 ;
+    rdfs:comment "The living contents of a cell; the matter contained within (but not including) the plasma membrane, usually taken to exclude large vacuoles and masses of secretory or ingested material." .
+
+obo:GO_0005737 rdf:type owl:Class ;
+    rdfs:label "cytoplasm" ;
+    rdfs:subClassOf obo:GO_0005622 ;
+    rdfs:comment "All of the contents of a cell excluding the plasma membrane and nucleus, but including other subcellular structures." .
+
+obo:GO_0005634 rdf:type owl:Class ;
+    rdfs:label "nucleus" ;
+    rdfs:subClassOf obo:GO_0005622 ;
+    rdfs:comment "A membrane-bounded organelle of eukaryotic cells in which chromosomes are housed and replicated." .
+
+# Gene products
+obo:UniProtKB_P53_HUMAN rdf:type owl:NamedIndividual ;
+    rdfs:label "Cellular tumor antigen p53" ;
+    go:located_in obo:GO_0005634 ;
+    go:participates_in obo:GO_0007049 ;
+    go:has_function obo:GO_0003824 ;
+    rdfs:comment "Acts as a tumor suppressor in many tumor types; induces growth arrest or apoptosis depending on the physiological circumstances and cell type." .
+
+obo:UniProtKB_CYCA_HUMAN rdf:type owl:NamedIndividual ;
+    rdfs:label "Cyclin-A" ;
+    go:located_in obo:GO_0005634 ;
+    go:participates_in obo:GO_0022402 ;
+    rdfs:comment "Essential for the control of the cell cycle at the G1/S (start) and the G2/M (mitosis) transitions." .
+
+obo:UniProtKB_ACTB_HUMAN rdf:type owl:NamedIndividual ;
+    rdfs:label "Actin, cytoplasmic 1" ;
+    go:located_in obo:GO_0005737 ;
+    go:participates_in obo:GO_0009987 ;
+    rdfs:comment "Actins are highly conserved proteins that are involved in various types of cell motility and are ubiquitously expressed in all eukaryotic cells." .
+
+# Properties
+go:located_in rdf:type owl:ObjectProperty ;
+    rdfs:label "located in" ;
+    rdfs:comment "Describes the relationship between a gene product and the cellular component where it is located." .
+
+go:participates_in rdf:type owl:ObjectProperty ;
+    rdfs:label "participates in" ;
+    rdfs:comment "Describes the relationship between a gene product and a biological process in which it participates." .
+
+go:has_function rdf:type owl:ObjectProperty ;
+    rdfs:label "has function" ;
+    rdfs:comment "Describes the relationship between a gene product and the molecular function it performs." .
+
+# Some additional relationships between terms
+obo:GO_0022402 rdfs:subClassOf obo:GO_0007049 .
+
+# Cross-references for additional information
+obo:GO_0007049 rdfs:seeAlso <http://en.wikipedia.org/wiki/Cell_cycle> .
+obo:GO_0005634 rdfs:seeAlso <http://en.wikipedia.org/wiki/Cell_nucleus> . 

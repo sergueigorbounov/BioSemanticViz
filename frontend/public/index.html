@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#2196f3" />
+    <meta
+      name="description"
+      content="BioSemanticViz - Biological Intelligence Platform for Data Visualization and Semantic Reasoning"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.svg" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+    />
+    <title>BioSemanticViz</title>
+    <script>
+      /**
+       * Create placeholder images at runtime if they don't exist
+       * This is a fallback and shouldn't be needed with our SVG files
+       */
+      function generatePlaceholderLogo(size) {
+        const canvas = document.createElement('canvas');
+        canvas.width = size;
+        canvas.height = size;
+        
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+        
+        // Create gradient background
+        const gradient = ctx.createLinearGradient(0, 0, size, size);
+        gradient.addColorStop(0, '#2196f3');
+        gradient.addColorStop(1, '#1976d2');
+        
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, size, size);
+        
+        // Add text
+        ctx.fillStyle = '#ffffff';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        
+        const fontSize = Math.floor(size / 4);
+        ctx.font = `bold ${fontSize}px Arial, sans-serif`;
+        
+        ctx.fillText('BSV', size / 2, size / 2);
+        
+        return canvas.toDataURL('image/png');
+      }
+      
+      // Set favicon dynamically if needed
+      const faviconLink = document.querySelector('link[rel="icon"]');
+      if (faviconLink) {
+        const favicon = new Image();
+        favicon.src = faviconLink.href;
+        favicon.onerror = function() {
+          faviconLink.href = generatePlaceholderLogo(32);
+        };
+      }
+      
+      // Set apple-touch-icon dynamically if needed
+      const appleIconLink = document.querySelector('link[rel="apple-touch-icon"]');
+      if (appleIconLink) {
+        const appleIcon = new Image();
+        appleIcon.src = appleIconLink.href;
+        appleIcon.onerror = function() {
+          appleIconLink.href = generatePlaceholderLogo(192);
+        };
+      }
+    </script>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html> 
