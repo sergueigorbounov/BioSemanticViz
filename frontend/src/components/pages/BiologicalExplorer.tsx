@@ -10,11 +10,16 @@ import {
   Alert,
   Tabs,
   Tab,
+  ButtonGroup,
+  Button,
 } from '@mui/material';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import ViewListIcon from '@mui/icons-material/ViewList';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import SpeciesTree from '../visualizations/SpeciesTree';
 import axios from 'axios';
 import { SpeciesTreeData } from '../../types/biology';
+import HierarchicalBioTree, { TreeNodeData } from '../visualizations/HierarchicalBioTree';
 
 // Types for our biological entities
 interface Species {
@@ -29,6 +34,7 @@ interface OrthoGroup {
   name: string;
   species: string[];
   genes: string[];
+  description?: string;
 }
 
 interface Gene {
@@ -42,7 +48,8 @@ enum ViewState {
   SPECIES_VIEW = 'species',
   ORTHOGROUP_VIEW = 'orthogroup',
   GENE_VIEW = 'gene',
-  GENE_DETAILS = 'gene_details'
+  GENE_DETAILS = 'gene_details',
+  HIERARCHY_VIEW = 'hierarchy'
 }
 
 // Create API client
@@ -237,6 +244,27 @@ const BiologicalExplorer: React.FC = () => {
     </Breadcrumbs>
   );
 
+  // Prepare the initial tree data for the hierarchical view
+  const prepareInitialTreeData = () => {
+    if (!speciesData) return null;
+    
+    // Transform the species tree data to the format our component expects
+    const transformNode = (node: any): TreeNodeData => {
+      return {
+        id: node.id,
+        name: node.name,
+        type: node.type || 'species',
+        scientific_name: node.scientific_name,
+        common_name: node.common_name,
+        taxonomy_id: node.taxonomy_id,
+        children: node.children ? node.children.map(transformNode) : [],
+        _childrenLoaded: !!node.children?.length
+      };
+    };
+    
+    return transformNode(speciesData);
+  };
+
   // Render content based on current view
   const renderContent = () => {
     if (loading) {
@@ -270,7 +298,7 @@ const BiologicalExplorer: React.FC = () => {
                   >
                     <Typography variant="subtitle1">{og.name}</Typography>
                     <Typography variant="body2" color="text.secondary">
-                      {og.description}
+                      {og.description || 'No description available'}
                     </Typography>
                     <Box sx={{ mt: 1 }}>
                       <Typography variant="caption">
@@ -370,6 +398,29 @@ const BiologicalExplorer: React.FC = () => {
           </Paper>
         );
         
+      case ViewState.HIERARCHY_VIEW:
+        return (
+          <Paper elevation={2} sx={{ p: 2 }}>
+            <Typography variant="h6" gutterBottom>Biological Hierarchy</Typography>
+            {speciesData ? (
+              <HierarchicalBioTree 
+                initialData={prepareInitialTreeData() || {
+                  id: 'root',
+                  name: 'No Data Available',
+                  type: 'species',
+                  children: []
+                }} 
+                width={800} 
+                height={600}
+              />
+            ) : (
+              <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
+                <CircularProgress />
+              </Box>
+            )}
+          </Paper>
+        );
+        
       default:
         return null;
     }
@@ -383,6 +434,26 @@ const BiologicalExplorer: React.FC = () => {
         </Typography>
         
         {renderBreadcrumbs()}
+        
+        <Box sx={{ mb: 3, display: 'flex', justifyContent: 'flex-end' }}>
+          <ButtonGroup variant="outlined" size="small">
+            <Button 
+              startIcon={<ViewListIcon />}
+              variant={currentView !== ViewState.HIERARCHY_VIEW ? "contained" : "outlined"}
+              onClick={() => setCurrentView(ViewState.SPECIES_VIEW)}
+            >
+              Standard View
+            </Button>
+            <Button 
+              startIcon={<AccountTreeIcon />}
+              variant={currentView === ViewState.HIERARCHY_VIEW ? "contained" : "outlined"}
+              onClick={() => setCurrentView(ViewState.HIERARCHY_VIEW)}
+            >
+              Hierarchy View
+            </Button>
+          </ButtonGroup>
+        </Box>
+        
         {renderContent()}
       </Box>
     </Container>

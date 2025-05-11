@@ -1,0 +1,43 @@
+.node circle {
+  transition: r 0.3s, fill 0.3s;
+}
+
+.node:hover circle {
+  r: 10;
+}
+
+.node text {
+  transition: font-size 0.3s;
+}
+
+.node:hover text {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.link {
+  transition: stroke-width 0.3s;
+}
+
+.link:hover {
+  stroke-width: 2.5px;
+  stroke: #555;
+}
+
+.node.expanded circle {
+  stroke: #333;
+  stroke-width: 2px;
+}
+
+.tooltip {
+  position: absolute;
+  text-align: center;
+  padding: 8px;
+  font: 12px sans-serif;
+  background: white;
+  border: 1px solid #aaa;
+  border-radius: 4px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s;
+} 
