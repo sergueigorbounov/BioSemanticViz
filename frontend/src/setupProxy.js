@@ -5,9 +5,9 @@ module.exports = function(app) {
   
   // Try different target URLs in order of preference
   const targets = [
-    'http://localhost:8001',
-    'http://127.0.0.1:8001',
-    'http://0.0.0.0:8001'
+    'http://localhost:8002',
+    'http://127.0.0.1:8002',
+    'http://0.0.0.0:8002'
   ];
   
   // Use the first target by default

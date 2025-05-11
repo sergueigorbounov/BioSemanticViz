@@ -37,10 +37,10 @@ BioSemanticViz is a full-stack web application designed to transform complex bio
 ### Installation
 
 1. Clone the repository:
-```bash
+   ```bash
 git clone https://github.com/sergueigorbounov/BioSemanticViz.git
-cd BioSemanticViz
-```
+   cd BioSemanticViz
+   ```
 
 2. Set up the backend:
 ```bash
@@ -52,15 +52,15 @@ cd app
 ```
 
 3. Set up the frontend:
-```bash
+   ```bash
 cd frontend
 npm install
-```
+   ```
 
 ### Running the Application
 
 1. Start the backend server:
-```bash
+   ```bash
 cd backend/app
 python flask_app.py
 ```

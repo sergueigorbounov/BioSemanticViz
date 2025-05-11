@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import {
   AppBar,
   Toolbar,
@@ -11,29 +11,49 @@ import {
 } from '@mui/material';
 import BiotechIcon from '@mui/icons-material/Biotech';
 
+// Define the navigation links
+const navLinks = [
+  { name: 'Home', path: '/' },
+  { name: 'Upload', path: '/upload' },
+  { name: 'Biology', path: '/biology' },
+];
+
 const Header: React.FC = () => {
   const theme = useTheme();
 
   return (
-    <AppBar position="static">
-      <Container maxWidth="lg">
+    <AppBar position="static" sx={{ marginBottom: 2 }}>
+      <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <Box display="flex" alignItems="center" component={RouterLink} to="/" sx={{ textDecoration: 'none', color: 'white' }}>
+          <Box display="flex" alignItems="center">
             <BiotechIcon sx={{ mr: 1, fontSize: '2rem' }} />
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontWeight: 700 }}>
+            <Typography
+              variant="h6"
+              noWrap
+              component={Link}
+              to="/"
+              sx={{
+                mr: 2,
+                fontWeight: 700,
+                color: 'inherit',
+                textDecoration: 'none',
+              }}
+            >
               BioSemanticViz
             </Typography>
           </Box>
 
-          <Box sx={{ flexGrow: 1 }} />
-
-          <Box sx={{ display: 'flex' }}>
-            <Button component={RouterLink} to="/" color="inherit">
-              Home
+          <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center' }}>
+            {navLinks.map((link) => (
+              <Button
+                key={link.name}
+                component={Link}
+                to={link.path}
+                sx={{ color: 'white', mx: 1 }}
+              >
+                {link.name}
             </Button>
-            <Button component={RouterLink} to="/upload" color="inherit">
-              Upload
-            </Button>
+            ))}
           </Box>
         </Toolbar>
       </Container>

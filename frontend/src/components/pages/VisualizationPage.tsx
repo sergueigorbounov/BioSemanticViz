@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -32,44 +32,42 @@ const VIZ_TYPES = [
 interface VisualizationPageProps {}
 
 const VisualizationPage: React.FC<VisualizationPageProps> = () => {
-  const { dataId } = useParams<{ dataId: string }>();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [visualizationType, setVisualizationType] = useState<string>('phylogenetic_tree');
+  const [vizType, setVizType] = useState<string>('phylogenetic_tree');
   const [visualizationData, setVisualizationData] = useState<any>(null);
   const [activeTab, setActiveTab] = useState<number>(0);
   
-  // Load visualization data
-  useEffect(() => {
-    if (!dataId) {
-      setError('No data ID provided');
-      setLoading(false);
-      return;
-    }
-    
-    loadVisualization(visualizationType);
-  }, [dataId, visualizationType]);
-  
-  const loadVisualization = async (vizType: string) => {
-    if (!dataId) return;
+  const loadVisualization = useCallback(async () => {
+    if (!id) return;
     
     setLoading(true);
     setError(null);
     
     try {
-      const result = await visualizeData(dataId, vizType);
+      const result = await visualizeData(id, vizType);
       setVisualizationData(result);
     } catch (err) {
       setError(handleApiError(err));
     } finally {
       setLoading(false);
     }
-  };
+  }, [id, vizType]);
+  
+  // Load visualization on component mount or when parameters change
+  useEffect(() => {
+    if (id) {
+      loadVisualization();
+    } else {
+      setError('No data ID provided');
+    }
+  }, [id, vizType, loadVisualization]);
   
   const handleVisualizationTypeChange = (event: SelectChangeEvent) => {
-    setVisualizationType(event.target.value);
+    setVizType(event.target.value);
   };
   
   const handleTabChange = (_: React.ChangeEvent<{}>, newValue: number) => {
@@ -77,7 +75,7 @@ const VisualizationPage: React.FC<VisualizationPageProps> = () => {
   };
   
   const handleAnalyzeClick = () => {
-    navigate(`/analyze/${dataId}`);
+    navigate(`/analysis/${id}`);
   };
   
   // Render the appropriate visualization based on type
@@ -106,7 +104,7 @@ const VisualizationPage: React.FC<VisualizationPageProps> = () => {
       );
     }
     
-    switch (visualizationType) {
+    switch (vizType) {
       case 'phylogenetic_tree':
         return (
           <Box className="visualization-container">
@@ -149,7 +147,7 @@ const VisualizationPage: React.FC<VisualizationPageProps> = () => {
       default:
         return (
           <Alert severity="warning" sx={{ mt: 2 }}>
-            Unknown visualization type: {visualizationType}
+            Unknown visualization type: {vizType}
           </Alert>
         );
     }
@@ -172,7 +170,7 @@ const VisualizationPage: React.FC<VisualizationPageProps> = () => {
                     <InputLabel id="viz-type-label">Visualization Type</InputLabel>
                     <Select
                       labelId="viz-type-label"
-                      value={visualizationType}
+                      value={vizType}
                       onChange={handleVisualizationTypeChange}
                       label="Visualization Type"
                       disabled={loading}
@@ -189,7 +187,7 @@ const VisualizationPage: React.FC<VisualizationPageProps> = () => {
                   <Button
                     variant="outlined"
                     onClick={handleAnalyzeClick}
-                    disabled={loading || !dataId}
+                    disabled={loading || !id}
                   >
                     Analyze This Data
                   </Button>

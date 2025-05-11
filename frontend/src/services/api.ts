@@ -1,7 +1,8 @@
 import axios, { AxiosResponse } from 'axios';
+import { Gene, SpeciesTreeData } from '../types/biology';
 
 // Define the backend URL based on environment
-const BACKEND_URL = 'http://localhost:8001';
+const BACKEND_URL = 'http://localhost:8002';
 
 // Define API response types
 export interface ProcessedData {
@@ -71,9 +72,6 @@ apiClient.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-// Helper function to introduce a delay
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 // API methods
 export const uploadData = async (file: File): Promise<ProcessedData> => {
@@ -191,4 +189,19 @@ export const handleApiError = (error: any): string => {
     // Something went wrong with the request setup
     return `Error: ${error.message || 'Unknown error occurred'}`;
   }
+};
+
+export const fetchSpeciesTree = async (): Promise<SpeciesTreeData> => {
+  const response = await axios.get(`${BACKEND_URL}/api/species-tree`);
+  return response.data;
+};
+
+export const fetchGeneDetails = async (geneId: string): Promise<Gene> => {
+  const response = await axios.get(`${BACKEND_URL}/api/gene/${geneId}`);
+  return response.data;
+};
+
+export const fetchOrthogroupGenes = async (orthogroupId: string): Promise<Gene[]> => {
+  const response = await axios.get(`${BACKEND_URL}/api/orthogroup/${orthogroupId}`);
+  return response.data;
 }; 

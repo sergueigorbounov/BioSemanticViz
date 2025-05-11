@@ -1,33 +1,19 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import Box from '@mui/material/Box';
-
-// Components
+import { CssBaseline, Box, Container } from '@mui/material';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import BackendStatus from './components/BackendStatus';
-
-// Pages
-import HomePage from './components/pages/HomePage';
-import UploadPage from './components/pages/UploadPage';
-import VisualizationPage from './components/pages/VisualizationPage';
-import AnalysisPage from './components/pages/AnalysisPage';
-import NotFoundPage from './components/pages/NotFoundPage';
 
 // Define theme
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#2196f3',
-      light: '#64b5f6',
-      dark: '#1976d2',
+      main: '#2e7d32',
     },
     secondary: {
-      main: '#ff9800',
-      light: '#ffb74d',
-      dark: '#f57c00',
+      main: '#f50057',
     },
     background: {
       default: '#f5f7fa',
@@ -76,26 +62,26 @@ const theme = createTheme({
   },
 });
 
-const App: React.FC = () => {
+function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box className="app-container" sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: '100vh',
+        }}
+      >
         <BackendStatus />
         <Header />
-        <Box component="main" className="content-container" sx={{ flexGrow: 1 }}>
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/upload" element={<UploadPage />} />
-            <Route path="/visualize/:dataId" element={<VisualizationPage />} />
-            <Route path="/analyze/:dataId" element={<AnalysisPage />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </Box>
+        <Container component="main" sx={{ flexGrow: 1, py: 3 }}>
+          <Outlet />
+        </Container>
         <Footer />
       </Box>
     </ThemeProvider>
   );
-};
+}
 
 export default App; 

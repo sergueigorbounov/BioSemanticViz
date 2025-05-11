@@ -53,7 +53,7 @@ const HomePage: React.FC = () => {
   }, []);
 
   const handleUploadClick = () => {
-    navigate('/upload');
+      navigate('/upload');
   };
 
   const handleCloseAlert = () => {

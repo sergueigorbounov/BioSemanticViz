@@ -3,6 +3,10 @@ from flask_cors import CORS
 import os
 import uuid
 import json
+import pandas as pd
+import numpy as np
+from routes.biological_data import bio_bp
+import argparse
 
 app = Flask(__name__)
 # Configure CORS to allow requests from any origin
@@ -11,6 +15,9 @@ CORS(app, resources={r"/*": {"origins": "*"}})
 # Create a temporary directory for uploads if it doesn't exist
 UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__), 'uploads')
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+# Register blueprints
+app.register_blueprint(bio_bp, url_prefix='/api')
 
 # Add routes without /api prefix to match incoming requests
 @app.route('/status')
@@ -142,5 +149,9 @@ def analyze():
     return jsonify(analysis_results)
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Run the Flask app')
+    parser.add_argument('--port', type=int, default=8001, help='Port to run the server on')
+    args = parser.parse_args()
+    
     # Host='0.0.0.0' makes the server accessible from any IP
-    app.run(debug=True, port=8001, host='0.0.0.0')
+    app.run(debug=True, port=args.port, host='0.0.0.0')

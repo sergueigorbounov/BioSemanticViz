@@ -96,7 +96,7 @@ const UploadPage: React.FC = () => {
       formData.append('file', file);
       
       const xhr = new XMLHttpRequest();
-      xhr.open('POST', 'http://localhost:8001/upload', true);
+      xhr.open('POST', 'http://localhost:8002/upload', true);
       
       // Add CORS headers
       xhr.setRequestHeader('Access-Control-Allow-Origin', '*');

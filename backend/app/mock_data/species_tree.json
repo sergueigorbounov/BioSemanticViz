@@ -1,0 +1,75 @@
+{
+  "species": [
+    {
+      "id": "root",
+      "name": "Eukaryota",
+      "children": [
+        {
+          "id": "plants",
+          "name": "Plantae",
+          "children": [
+            {
+              "id": "arabidopsis",
+              "name": "Arabidopsis thaliana",
+              "orthogroups": [
+                "OG0001",
+                "OG0002"
+              ]
+            },
+            {
+              "id": "rice",
+              "name": "Oryza sativa",
+              "orthogroups": [
+                "OG0001",
+                "OG0003"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "animals",
+          "name": "Metazoa",
+          "children": [
+            {
+              "id": "human",
+              "name": "Homo sapiens",
+              "orthogroups": [
+                "OG0002",
+                "OG0004"
+              ]
+            },
+            {
+              "id": "mouse",
+              "name": "Mus musculus",
+              "orthogroups": [
+                "OG0002",
+                "OG0004"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "orthogroups": {
+    "OG0001": [
+      "plant_gene1",
+      "plant_gene2",
+      "rice_gene1"
+    ],
+    "OG0002": [
+      "plant_gene3",
+      "human_gene1",
+      "mouse_gene1"
+    ],
+    "OG0003": [
+      "rice_gene2",
+      "rice_gene3"
+    ],
+    "OG0004": [
+      "human_gene2",
+      "mouse_gene2",
+      "human_gene3"
+    ]
+  }
+}

@@ -27,7 +27,7 @@ fi
 source venv/bin/activate
 echo "Installing essential packages only..."
 pip install --upgrade pip
-pip install flask flask-cors
+pip install flask flask-cors pandas numpy
 
 # Export the Python path
 export PYTHONPATH=$PWD
@@ -55,13 +55,13 @@ def examples():
     return jsonify({"examples": ["example1", "example2"]})
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8001)
+    app.run(debug=True, port=8002)
 EOF
 fi
 
 # Start backend
 cd app
-python flask_app.py &
+python flask_app.py --port=8002 &
 BACKEND_PID=$!
 cd ..
 
@@ -69,8 +69,8 @@ cd ..
 echo "Waiting for backend to start..."
 for i in {1..10}; do
   sleep 3
-  if is_port_in_use 8001; then
-    echo "Backend server started on port 8001"
+  if is_port_in_use 8002; then
+    echo "Backend server started on port 8002"
     break
   fi
   if [ $i -eq 10 ]; then
@@ -107,7 +107,7 @@ done
 
 echo "✨ BioSemanticViz application is now running with minimal functionality ✨"
 echo "- Frontend: http://localhost:3000"
-echo "- Backend API: http://localhost:8001/api"
+echo "- Backend API: http://localhost:8002/api"
 echo "Note: This is a simplified version using Flask instead of FastAPI"
 echo "Press Ctrl+C to stop all services"
 

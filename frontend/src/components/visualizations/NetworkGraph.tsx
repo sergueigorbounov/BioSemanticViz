@@ -29,14 +29,16 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({ nodes, edges, loading, erro
   const [hoveredNode, setHoveredNode] = useState<Node | null>(null);
   
   useEffect(() => {
-    if (!nodes || !edges || loading || error || nodes.length === 0) return;
-    
-    // Clear previous visualization
-    if (svgRef.current) {
-      d3.select(svgRef.current).selectAll('*').remove();
+    if (svgRef.current && nodes && edges && !loading && !error && nodes.length > 0) {
+      renderGraph();
     }
     
-    renderGraph();
+    return () => {
+      // Cleanup
+      if (svgRef.current) {
+        d3.select(svgRef.current).selectAll('*').remove();
+      }
+    };
   }, [nodes, edges, loading, error]);
   
   const renderGraph = () => {
