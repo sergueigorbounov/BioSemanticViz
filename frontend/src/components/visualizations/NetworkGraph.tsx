@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import * as d3 from 'd3';
 import { Box, Typography, CircularProgress } from '@mui/material';
 
@@ -28,20 +28,7 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({ nodes, edges, loading, erro
   const svgRef = useRef<SVGSVGElement>(null);
   const [hoveredNode, setHoveredNode] = useState<Node | null>(null);
   
-  useEffect(() => {
-    if (svgRef.current && nodes && edges && !loading && !error && nodes.length > 0) {
-      renderGraph();
-    }
-    
-    return () => {
-      // Cleanup
-      if (svgRef.current) {
-        d3.select(svgRef.current).selectAll('*').remove();
-      }
-    };
-  }, [nodes, edges, loading, error]);
-  
-  const renderGraph = () => {
+  const renderGraph = useCallback(() => {
     if (!svgRef.current) return;
     
     const width = svgRef.current.clientWidth;
@@ -171,7 +158,21 @@ const NetworkGraph: React.FC<NetworkGraphProps> = ({ nodes, edges, loading, erro
     });
     
     simulation.force<d3.ForceLink<any, any>>('link')?.links(linkData);
-  };
+  }, [nodes, edges, setHoveredNode]);
+  
+  useEffect(() => {
+    if (svgRef.current && nodes && edges && !loading && !error && nodes.length > 0) {
+      renderGraph();
+    }
+    
+    return () => {
+      // Cleanup
+      const svg = svgRef.current;
+      if (svg) {
+        d3.select(svg).selectAll('*').remove();
+      }
+    };
+  }, [nodes, edges, loading, error, renderGraph]);
   
   const getColorByType = (type?: string): string => {
     if (!type) return '#999';

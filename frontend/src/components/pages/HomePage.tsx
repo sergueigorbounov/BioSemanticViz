@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -7,7 +7,6 @@ import {
   Typography,
   Card,
   CardContent,
-  CardActions,
   Grid,
   useTheme,
   Alert,
@@ -17,7 +16,6 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DataObjectIcon from '@mui/icons-material/DataObject';
 import BiotechIcon from '@mui/icons-material/Biotech';
-import { checkServerStatus } from '../../services/api';
 
 const features = [
   {
@@ -40,17 +38,7 @@ const features = [
 const HomePage: React.FC = () => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const [serverStatus, setServerStatus] = useState<boolean>(true); // Assume server is running by default
   const [showStatusAlert, setShowStatusAlert] = useState<boolean>(false);
-
-  useEffect(() => {
-    // Since we know the server is running from our curl tests,
-    // we'll skip the status check to avoid CORS issues
-    setServerStatus(true);
-    setShowStatusAlert(false);
-    
-    // No need for interval checking
-  }, []);
 
   const handleUploadClick = () => {
       navigate('/upload');

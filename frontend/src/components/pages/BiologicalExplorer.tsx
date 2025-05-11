@@ -298,7 +298,7 @@ const BiologicalExplorer: React.FC = () => {
                   >
                     <Typography variant="subtitle1">{og.name}</Typography>
                     <Typography variant="body2" color="text.secondary">
-                      {og.description || 'No description available'}
+                      {(og as any).description || 'No description available'}
                     </Typography>
                     <Box sx={{ mt: 1 }}>
                       <Typography variant="caption">

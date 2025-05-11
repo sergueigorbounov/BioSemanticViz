@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import * as d3 from 'd3';
-import { Box, CircularProgress } from '@mui/material';
+import { Box, CircularProgress, Button, TextField, InputAdornment } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 import axios from 'axios';
 import './HierarchicalBioTree.css';
 
-// Define the TreeNodeData interface that was missing
+// Define the TreeNodeData interface
 export interface TreeNodeData {
   id: string;
   name: string;
@@ -16,6 +17,7 @@ export interface TreeNodeData {
   description?: string;
   taxonomy_id?: number;
   _childrenLoaded?: boolean;
+  _children?: TreeNodeData[]; // For collapsed nodes
 }
 
 interface HierarchicalBioTreeProps {
@@ -32,6 +34,13 @@ const HierarchicalBioTree: React.FC<HierarchicalBioTreeProps> = ({
   const svgRef = useRef<SVGSVGElement | null>(null);
   const [data, setData] = useState<TreeNodeData>(initialData);
   const [loading, setLoading] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [tooltip, setTooltip] = useState<{visible: boolean, content: string, x: number, y: number}>({
+    visible: false,
+    content: '',
+    x: 0,
+    y: 0
+  });
 
   // Create a tree layout
   const createTreeLayout = () => {
@@ -46,8 +55,19 @@ const HierarchicalBioTree: React.FC<HierarchicalBioTreeProps> = ({
 
     const svg = d3.select(svgRef.current)
       .attr('width', width)
-      .attr('height', height)
-      .append('g')
+      .attr('height', height);
+      
+    // Add zoom behavior
+    const zoomBehavior = d3.zoom<SVGSVGElement, unknown>()
+      .scaleExtent([0.1, 3])
+      .on('zoom', (event) => {
+        g.attr('transform', event.transform);
+      });
+    
+    svg.call(zoomBehavior);
+    
+    // Add main group for transformations
+    const g = svg.append('g')
       .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
     // Create hierarchy
@@ -60,8 +80,8 @@ const HierarchicalBioTree: React.FC<HierarchicalBioTreeProps> = ({
     // Compute layout
     treeLayout(root);
     
-    // Add links
-    svg.selectAll('.link')
+    // Add links with transitions
+    const links = g.selectAll('.link')
       .data(root.links())
       .enter()
       .append('path')
@@ -73,22 +93,49 @@ const HierarchicalBioTree: React.FC<HierarchicalBioTreeProps> = ({
       })
       .attr('fill', 'none')
       .attr('stroke', '#ccc')
-      .attr('stroke-width', 1.5);
+      .attr('stroke-width', 1.5)
+      .attr('opacity', 0)
+      .transition()
+      .duration(500)
+      .attr('opacity', 1);
     
-    // Add nodes
-    const nodes = svg.selectAll('.node')
+    // Add nodes with transitions
+    const nodes = g.selectAll('.node')
       .data(root.descendants())
       .enter()
       .append('g')
-      .attr('class', d => `node ${d.data._childrenLoaded ? 'expanded' : ''}`)
+      .attr('class', d => `node ${d.data._childrenLoaded ? 'expanded' : ''} ${searchTerm && d.data.name.toLowerCase().includes(searchTerm.toLowerCase()) ? 'search-match' : ''}`)
       .attr('transform', d => `translate(${d.y},${d.x})`)
       .attr('cursor', 'pointer')
-      .on('click', (event, d) => handleNodeClick(d.data));
+      .attr('opacity', 0)
+      .transition()
+      .duration(500)
+      .delay((d, i) => i * 10)
+      .attr('opacity', 1);
+    
+    // Add node interactive elements after transitions
+    g.selectAll('.node')
+      .on('click', (event, d: any) => handleNodeClick(d.data))
+      .on('mouseover', (event, d: any) => {
+        // Generate tooltip content
+        const content = generateTooltipContent(d.data);
+        // Set tooltip position and content
+        setTooltip({
+          visible: true,
+          content,
+          x: event.pageX,
+          y: event.pageY
+        });
+      })
+      .on('mouseout', () => {
+        setTooltip({...tooltip, visible: false});
+      });
     
     // Add node circles
-    nodes.append('circle')
+    g.selectAll('.node')
+      .append('circle')
       .attr('r', 8)
-      .attr('fill', (d) => {
+      .attr('fill', (d: any) => {
         switch (d.data.type) {
           case 'species': return '#4CAF50'; // Green
           case 'orthogroup': return '#2196F3'; // Blue
@@ -98,29 +145,82 @@ const HierarchicalBioTree: React.FC<HierarchicalBioTreeProps> = ({
       });
     
     // Add labels
-    nodes.append('text')
+    g.selectAll('.node')
+      .append('text')
       .attr('dy', '.31em')
-      .attr('x', (d) => d.children ? -12 : 12)
-      .attr('text-anchor', (d) => d.children ? 'end' : 'start')
-      .text((d) => d.data.name)
+      .attr('x', (d: any) => d.children ? -12 : 12)
+      .attr('text-anchor', (d: any) => d.children ? 'end' : 'start')
+      .text((d: any) => d.data.name)
       .attr('font-size', '12px')
       .attr('fill', '#333');
 
     // Add expand/collapse indicators
-    nodes.filter((d) => !d.data._childrenLoaded && 
+    g.selectAll('.node')
+      .filter((d: any) => d.data._childrenLoaded)
+      .append('text')
+      .attr('dy', '0.3em')
+      .attr('x', 0)
+      .attr('text-anchor', 'middle')
+      .text('-')  // Minus sign for collapsing
+      .attr('font-size', '16px')
+      .attr('fill', '#FFF');
+      
+    g.selectAll('.node')
+      .filter((d: any) => !d.data._childrenLoaded && 
                          (d.data.type === 'species' || d.data.type === 'orthogroup'))
       .append('text')
       .attr('dy', '0.3em')
       .attr('x', 0)
       .attr('text-anchor', 'middle')
-      .text('+')
+      .text('+')  // Plus sign for expanding
       .attr('font-size', '16px')
       .attr('fill', '#FFF');
+      
+    // Highlight search matches
+    if (searchTerm) {
+      g.selectAll('.node.search-match circle')
+        .attr('stroke', '#FF9800')
+        .attr('stroke-width', 3);
+    }
+  };
+  
+  // Generate tooltip content based on node data
+  const generateTooltipContent = (node: TreeNodeData): string => {
+    let content = `<strong>${node.name}</strong>`;
+    
+    if (node.type) {
+      content += `<br>Type: ${node.type}`;
+    }
+    
+    if (node.scientific_name) {
+      content += `<br>Scientific Name: ${node.scientific_name}`;
+    }
+    
+    if (node.common_name) {
+      content += `<br>Common Name: ${node.common_name}`;
+    }
+    
+    if (node.description) {
+      // Truncate description if too long
+      const desc = node.description.length > 100 
+        ? node.description.substring(0, 97) + '...' 
+        : node.description;
+      content += `<br>Description: ${desc}`;
+    }
+    
+    return content;
   };
 
   const handleNodeClick = async (node: TreeNodeData) => {
     if (node._childrenLoaded) {
-      // Toggle visibility (implement collapse functionality)
+      // Toggle node expansion/collapse
+      if (node.children && node.children.length > 0) {
+        // Collapse: store children and set children to empty array
+        setData(updateTreeDataForCollapse(node.id, node.children));
+      } else if (node._children && node._children.length > 0) {
+        // Expand: restore children from _children
+        setData(updateTreeDataForExpand(node.id, node._children));
+      }
       return;
     }
 
@@ -193,17 +293,189 @@ const HierarchicalBioTree: React.FC<HierarchicalBioTreeProps> = ({
     
     setData(updateNode(data));
   };
+  
+  const updateTreeDataForCollapse = (nodeId: string, children: TreeNodeData[]): TreeNodeData => {
+    // Function for collapsing nodes
+    const updateNode = (currentNode: TreeNodeData): TreeNodeData => {
+      if (currentNode.id === nodeId) {
+        return {
+          ...currentNode,
+          _children: children,
+          children: [],
+          _childrenLoaded: true
+        };
+      }
+      
+      if (currentNode.children) {
+        return {
+          ...currentNode,
+          children: currentNode.children.map(updateNode)
+        };
+      }
+      
+      return currentNode;
+    };
+    
+    return updateNode(data);
+  };
+  
+  const updateTreeDataForExpand = (nodeId: string, children: TreeNodeData[]): TreeNodeData => {
+    // Function for expanding nodes
+    const updateNode = (currentNode: TreeNodeData): TreeNodeData => {
+      if (currentNode.id === nodeId) {
+        return {
+          ...currentNode,
+          children: children,
+          _children: [],
+          _childrenLoaded: true
+        };
+      }
+      
+      if (currentNode.children) {
+        return {
+          ...currentNode,
+          children: currentNode.children.map(updateNode)
+        };
+      }
+      
+      return currentNode;
+    };
+    
+    return updateNode(data);
+  };
+  
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+  };
+  
+  const handleZoomIn = () => {
+    if (!svgRef.current) return;
+    
+    d3.select(svgRef.current)
+      .transition()
+      .duration(300)
+      .call(d3.zoom<SVGSVGElement, unknown>().scaleBy, 1.3);
+  };
+  
+  const handleZoomOut = () => {
+    if (!svgRef.current) return;
+    
+    d3.select(svgRef.current)
+      .transition()
+      .duration(300)
+      .call(d3.zoom<SVGSVGElement, unknown>().scaleBy, 0.7);
+  };
+  
+  const handleReset = () => {
+    if (!svgRef.current) return;
+    
+    d3.select(svgRef.current)
+      .transition()
+      .duration(300)
+      .call(d3.zoom<SVGSVGElement, unknown>().transform, d3.zoomIdentity);
+  };
+  
+  const handleExport = () => {
+    if (!svgRef.current) return;
+    
+    const svgData = new XMLSerializer().serializeToString(svgRef.current);
+    const blob = new Blob([svgData], { type: 'image/svg+xml' });
+    const url = URL.createObjectURL(blob);
+    
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'biological_tree.svg';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
 
   useEffect(() => {
     if (!svgRef.current) return;
     
     createTreeLayout();
     
-  }, [data, width, height]);
+  }, [data, width, height, searchTerm]);
 
   return (
     <Box sx={{ position: 'relative', overflow: 'auto' }}>
+      {/* Controls */}
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+        <TextField
+          placeholder="Search nodes..."
+          size="small"
+          onChange={(e) => handleSearch(e.target.value)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+          sx={{ width: '300px' }}
+        />
+        <Box>
+          <Button 
+            onClick={handleZoomIn} 
+            size="small" 
+            variant="outlined"
+            sx={{ mx: 0.5 }}
+          >
+            Zoom In
+          </Button>
+          <Button 
+            onClick={handleZoomOut}
+            size="small"
+            variant="outlined"
+            sx={{ mx: 0.5 }}
+          >
+            Zoom Out
+          </Button>
+          <Button 
+            onClick={handleReset}
+            size="small"
+            variant="outlined"
+            sx={{ mx: 0.5 }}
+          >
+            Reset
+          </Button>
+          <Button 
+            onClick={handleExport}
+            size="small"
+            variant="outlined"
+            sx={{ mx: 0.5 }}
+          >
+            Export
+          </Button>
+        </Box>
+      </Box>
+      
+      {/* Tree SVG */}
       <svg ref={svgRef} />
+      
+      {/* Tooltip */}
+      {tooltip.visible && (
+        <div 
+          className="tooltip" 
+          style={{
+            left: tooltip.x + 10,
+            top: tooltip.y - 10,
+            opacity: 1,
+            position: 'fixed',
+            zIndex: 9999,
+            backgroundColor: 'white',
+            border: '1px solid #ccc',
+            borderRadius: '4px',
+            padding: '8px',
+            pointerEvents: 'none',
+            boxShadow: '0 2px 5px rgba(0,0,0,0.2)'
+          }}
+          dangerouslySetInnerHTML={{ __html: tooltip.content }}
+        />
+      )}
+      
+      {/* Loading overlay */}
       {loading && (
         <Box 
           sx={{ 

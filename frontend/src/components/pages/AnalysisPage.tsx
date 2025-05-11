@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -47,18 +47,7 @@ const AnalysisPage: React.FC<AnalysisPageProps> = () => {
   const [analysisType, setAnalysisType] = useState<string>('basic');
   const [analysisResults, setAnalysisResults] = useState<any>(null);
   
-  // Load analysis data
-  useEffect(() => {
-    if (!dataId) {
-      setError('No data ID provided');
-      setLoading(false);
-      return;
-    }
-    
-    performAnalysis(analysisType);
-  }, [dataId, analysisType]);
-  
-  const performAnalysis = async (type: string) => {
+  const performAnalysis = useCallback(async (type: string) => {
     if (!dataId) return;
     
     setLoading(true);
@@ -72,7 +61,18 @@ const AnalysisPage: React.FC<AnalysisPageProps> = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [dataId]);
+  
+  // Load analysis data
+  useEffect(() => {
+    if (!dataId) {
+      setError('No data ID provided');
+      setLoading(false);
+      return;
+    }
+    
+    performAnalysis(analysisType);
+  }, [dataId, analysisType, performAnalysis]);
   
   const handleAnalysisTypeChange = (event: SelectChangeEvent) => {
     setAnalysisType(event.target.value);
