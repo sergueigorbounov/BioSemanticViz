@@ -18,6 +18,7 @@ const navLinks = [
   { name: 'Dashboard', path: '/dashboard' },
   { name: 'Analytics', path: '/analytics' },
   { name: 'Phylogenetics', path: '/phylo' },
+  { name: 'Orthologues', path: '/orthologues' },
 ];
 
 const Header: React.FC = () => {

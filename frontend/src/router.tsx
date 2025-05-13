@@ -10,6 +10,7 @@ import BioDashboard from './components/pages/BioDashboard';
 import AnalyticsDashboard from './components/pages/AnalyticsDashboard';
 import App from './App';
 import PhylogeneticAnalysis from './components/visualizations/PhylogeneticAnalysis';
+import OrthologuePage from './components/pages/OrthologuePage';
 
 // Router configuration options with recommended future flags
 const routerOptions = {
@@ -33,6 +34,7 @@ export const router = createBrowserRouter(
       <Route path="dashboard" element={<BioDashboard />} />
       <Route path="analytics" element={<AnalyticsDashboard />} />
       <Route path="phylo" element={<PhylogeneticAnalysis />} />
+      <Route path="orthologues" element={<OrthologuePage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Route>
   ),

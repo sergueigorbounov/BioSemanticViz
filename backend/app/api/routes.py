@@ -8,8 +8,16 @@ from ..services.data_ingestion import DataIngestionService
 from ..services.semantic_reasoning import SemanticReasoningService
 from ..services.visualization import VisualizationService
 from ..models.schemas import ProcessedDataResponse, AnalysisRequest, VisualizationRequest
+from .biological_routes import router as biological_router
+from .phylo import router as phylo_router
+from .orthologue import router as orthologue_router
 
 router = APIRouter()
+
+# Include the other routers
+router.include_router(biological_router)
+router.include_router(phylo_router)
+router.include_router(orthologue_router)
 
 @router.post("/upload", response_model=ProcessedDataResponse)
 async def upload_data(

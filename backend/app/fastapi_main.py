@@ -16,6 +16,7 @@ try:
         DashboardResponse, DashboardData, NameValuePair, GeneByOrthogroup
     )
     from .api.phylo import router as phylo_router
+    from .api.orthologue import router as orthologue_router
 except ImportError:
     # For direct module execution
     from app.models.biological_models import (
@@ -24,6 +25,7 @@ except ImportError:
         DashboardResponse, DashboardData, NameValuePair, GeneByOrthogroup
     )
     from app.api.phylo import router as phylo_router
+    from app.api.orthologue import router as orthologue_router
 
 # Create FastAPI app
 app = FastAPI(
@@ -550,6 +552,7 @@ async def analyze(data: Dict[str, Any]):
 
 # Include routers
 app.include_router(phylo_router)
+app.include_router(orthologue_router)
 
 # Run the app with uvicorn if this file is executed directly
 if __name__ == "__main__":
