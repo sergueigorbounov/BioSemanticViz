@@ -92,7 +92,7 @@ export interface SpeciesTreeData {
   name: string;
   type: 'species' | 'orthogroup';
   children?: SpeciesTreeData[];
-}
+} 
 
 // API response types
 export interface BiologicalResponse<T> {

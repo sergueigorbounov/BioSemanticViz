@@ -69,16 +69,16 @@ The FastAPI backend includes automatic API documentation:
    ```
 
 2. Install backend dependencies:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
    pip install -r requirements.txt
-   ```
+```
 
 3. Install frontend dependencies:
    ```bash
-   cd frontend
-   npm install
+cd frontend
+npm install
    ```
 
 ## Development
@@ -90,7 +90,7 @@ The FastAPI backend includes automatic API documentation:
    
    # For FastAPI backend
    ./fastapi_start.sh
-   ```
+```
 
 2. Open your browser and navigate to:
    ```

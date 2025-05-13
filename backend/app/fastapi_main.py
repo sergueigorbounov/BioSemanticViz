@@ -15,13 +15,15 @@ try:
         SpeciesResponse, OrthoGroupResponse, GeneResponse, GeneDetailResponse,
         DashboardResponse, DashboardData, NameValuePair, GeneByOrthogroup
     )
+    from .api.phylo import router as phylo_router
 except ImportError:
     # For direct module execution
-    from models.biological_models import (
+    from app.models.biological_models import (
         Species, OrthoGroup, Gene, SpeciesTreeNode,
         SpeciesResponse, OrthoGroupResponse, GeneResponse, GeneDetailResponse,
         DashboardResponse, DashboardData, NameValuePair, GeneByOrthogroup
     )
+    from app.api.phylo import router as phylo_router
 
 # Create FastAPI app
 app = FastAPI(
@@ -545,6 +547,9 @@ async def analyze(data: Dict[str, Any]):
     }
     
     return analysis_results
+
+# Include routers
+app.include_router(phylo_router)
 
 # Run the app with uvicorn if this file is executed directly
 if __name__ == "__main__":

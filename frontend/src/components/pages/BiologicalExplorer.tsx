@@ -16,10 +16,12 @@ import {
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import BiotechIcon from '@mui/icons-material/Biotech';
 import SpeciesTree from '../visualizations/SpeciesTree';
 import axios from 'axios';
 import { SpeciesTreeData } from '../../types/biology';
 import HierarchicalBioTree, { TreeNodeData } from '../visualizations/HierarchicalBioTree';
+import TaxoniumViewer from '../visualizations/TaxoniumViewer';
 
 // Types for our biological entities
 interface Species {
@@ -49,7 +51,8 @@ enum ViewState {
   ORTHOGROUP_VIEW = 'orthogroup',
   GENE_VIEW = 'gene',
   GENE_DETAILS = 'gene_details',
-  HIERARCHY_VIEW = 'hierarchy'
+  HIERARCHY_VIEW = 'hierarchy',
+  TAXONIUM_VIEW = 'taxonium'
 }
 
 // Create API client
@@ -421,6 +424,29 @@ const BiologicalExplorer: React.FC = () => {
           </Paper>
         );
         
+      case ViewState.TAXONIUM_VIEW:
+        return (
+          <Paper elevation={2} sx={{ p: 2 }}>
+            <Typography variant="h6" gutterBottom>Phylogenetic Tree (Taxonium)</Typography>
+            {speciesData ? (
+              <TaxoniumViewer 
+                treeData={prepareInitialTreeData() || {
+                  id: 'root',
+                  name: 'No Data Available',
+                  children: []
+                }} 
+                width={800} 
+                height={600}
+                colorBy="species"
+              />
+            ) : (
+              <Box sx={{ display: 'flex', justifyContent: 'center', my: 4 }}>
+                <CircularProgress />
+              </Box>
+            )}
+          </Paper>
+        );
+        
       default:
         return null;
     }
@@ -439,7 +465,7 @@ const BiologicalExplorer: React.FC = () => {
           <ButtonGroup variant="outlined" size="small">
             <Button 
               startIcon={<ViewListIcon />}
-              variant={currentView !== ViewState.HIERARCHY_VIEW ? "contained" : "outlined"}
+              variant={currentView !== ViewState.HIERARCHY_VIEW && currentView !== ViewState.TAXONIUM_VIEW ? "contained" : "outlined"}
               onClick={() => setCurrentView(ViewState.SPECIES_VIEW)}
             >
               Standard View
@@ -450,6 +476,13 @@ const BiologicalExplorer: React.FC = () => {
               onClick={() => setCurrentView(ViewState.HIERARCHY_VIEW)}
             >
               Hierarchy View
+            </Button>
+            <Button 
+              startIcon={<BiotechIcon />}
+              variant={currentView === ViewState.TAXONIUM_VIEW ? "contained" : "outlined"}
+              onClick={() => setCurrentView(ViewState.TAXONIUM_VIEW)}
+            >
+              Phylogenetic View
             </Button>
           </ButtonGroup>
         </Box>

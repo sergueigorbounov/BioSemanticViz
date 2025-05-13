@@ -9,15 +9,19 @@ import BiologicalExplorer from './components/pages/BiologicalExplorer';
 import BioDashboard from './components/pages/BioDashboard';
 import AnalyticsDashboard from './components/pages/AnalyticsDashboard';
 import App from './App';
+import PhylogeneticAnalysis from './components/visualizations/PhylogeneticAnalysis';
 
-// Opt into future React Router behaviors
+// Router configuration options with recommended future flags
 const routerOptions = {
+  basename: '/',
   future: {
+    v7_normalizeFormMethod: true,
     v7_startTransition: true,
     v7_relativeSplatPath: true
-  }
+  },
 };
 
+// Define the application routes
 export const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/*" element={<App />}>
@@ -28,6 +32,7 @@ export const router = createBrowserRouter(
       <Route path="explorer" element={<BiologicalExplorer />} />
       <Route path="dashboard" element={<BioDashboard />} />
       <Route path="analytics" element={<AnalyticsDashboard />} />
+      <Route path="phylo" element={<PhylogeneticAnalysis />} />
       <Route path="*" element={<NotFoundPage />} />
     </Route>
   ),
