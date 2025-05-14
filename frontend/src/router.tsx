@@ -7,12 +7,12 @@ import NotFoundPage from './components/pages/NotFoundPage';
 import AnalysisPage from './components/pages/AnalysisPage';
 import BiologicalExplorer from './components/pages/BiologicalExplorer';
 import BioDashboard from './components/pages/BioDashboard';
-import AnalyticsDashboard from './components/pages/AnalyticsDashboard';
 import App from './App';
 import PhylogeneticAnalysis from './components/visualizations/PhylogeneticAnalysis';
 import OrthologuePage from './components/pages/OrthologuePage';
 
 // Router configuration options with recommended future flags
+// Apply explicit enablement for v7_startTransition to prevent warning
 const routerOptions = {
   basename: '/',
   future: {
@@ -32,7 +32,6 @@ export const router = createBrowserRouter(
       <Route path="analysis/:id" element={<AnalysisPage />} />
       <Route path="explorer" element={<BiologicalExplorer />} />
       <Route path="dashboard" element={<BioDashboard />} />
-      <Route path="analytics" element={<AnalyticsDashboard />} />
       <Route path="phylo" element={<PhylogeneticAnalysis />} />
       <Route path="orthologues" element={<OrthologuePage />} />
       <Route path="*" element={<NotFoundPage />} />
@@ -42,7 +41,9 @@ export const router = createBrowserRouter(
 );
 
 const Router = () => {
-  return <RouterProvider router={router} />;
+  return <RouterProvider router={router} future={{
+    v7_startTransition: true
+  }} />;
 };
 
 export default Router; 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Button,
@@ -11,6 +11,12 @@ import {
   RadioGroup,
   FormControlLabel,
   Radio,
+  Tab,
+  Tabs,
+  Card,
+  CardContent,
+  Grid,
+  Divider,
 } from '@mui/material';
 import UploadFileIcon from '@mui/icons-material/UploadFile';
 import {
@@ -18,12 +24,22 @@ import {
   getExampleTree,
   PhyloNodeData
 } from '../../api/phyloClient';
+// Import API client for orthologue data
+import { searchOrthologue } from '../../api/orthologueClient';
 // Use our custom wrapper instead of importing directly
-// import TaxoniumWrapper from './TaxoniumWrapper';
-// Keep the native D3-based implementation as a fallback
 import TaxoniumViewer from './TaxoniumViewer';
-// Import the iframe wrapper
+// Import the simple Taxonium wrapper
+import SimpleTaxoniumWrapper from './SimpleTaxoniumWrapper';
+// Keep the iframe wrapper as a fallback
 import TaxoniumIframeWrapper from './TaxoniumIframeWrapper';
+
+interface NodeDetail {
+  id: string;
+  name?: string;
+  branch_length?: number;
+  orthogroups?: any[];
+  [key: string]: any;
+}
 
 /**
  * Phylogenetic tree analysis component
@@ -33,12 +49,10 @@ const PhylogeneticAnalysis: React.FC = () => {
   const [newickData, setNewickData] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
-  const [visualizationMode, setVisualizationMode] = useState<'native' | 'taxonium'>('native');
-
-  // At the beginning of the component, add this to warn users not to use Taxonium
-  useEffect(() => {
-    console.log("Note: Taxonium option has React compatibility issues. Using the native D3 visualization is recommended.");
-  }, []);
+  const [visualizationMode, setVisualizationMode] = useState<'native' | 'taxonium' | 'professional'>('professional');
+  const [treeType, setTreeType] = useState<'species' | 'gene'>('species');
+  const [selectedNode, setSelectedNode] = useState<NodeDetail | null>(null);
+  const [loadingOrthogroups, setLoadingOrthogroups] = useState<boolean>(false);
 
   // Handle file upload
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,6 +61,7 @@ const PhylogeneticAnalysis: React.FC = () => {
 
     setLoading(true);
     setError(null);
+    setSelectedNode(null); // Clear selected node when loading new tree
 
     try {
       const formData = new FormData();
@@ -67,6 +82,7 @@ const PhylogeneticAnalysis: React.FC = () => {
   const handleLoadExample = async () => {
     setLoading(true);
     setError(null);
+    setSelectedNode(null); // Clear selected node when loading new tree
     
     try {
       const result = await getExampleTree();
@@ -82,41 +98,47 @@ const PhylogeneticAnalysis: React.FC = () => {
 
   // Handle visualization mode change
   const handleVisualizationModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setVisualizationMode(event.target.value as 'native' | 'taxonium');
+    setVisualizationMode(event.target.value as 'native' | 'taxonium' | 'professional');
   };
 
-  // For Taxonium component, we need to convert the tree structure into the format it expects
-  const prepareTaxoniumData = () => {
-    if (!treeData || !newickData) return null;
+  // Handle tree type change
+  const handleTreeTypeChange = (_event: React.SyntheticEvent, newValue: 'species' | 'gene') => {
+    setTreeType(newValue);
+    setSelectedNode(null); // Clear selected node when switching tree types
+  };
+
+  // Handle node selection
+  const handleNodeSelect = async (node: any) => {
+    if (!node) return;
     
-    // For Taxonium we need to format the data as a JSON representation of nodes in a specific format
-    const formatTaxoniumData = (node: PhyloNodeData, parentId: string | null = null): any[] => {
-      const result: any[] = [];
-      
-      // Create main node entry
-      const nodeData = {
-        id: node.id,
-        name: node.name || node.id,
-        parent: parentId,
-        children: node.children?.map(child => child.id) || [],
-        branch_length: node.length || 0, // Use length instead of branch_length
-        x: 0, // Taxonium will calculate these positions
-        y: 0,
-      };
-      
-      result.push(nodeData);
-      
-      // Add all children recursively
-      if (node.children) {
-        for (const child of node.children) {
-          result.push(...formatTaxoniumData(child, node.id));
-        }
+    setSelectedNode({
+      id: node.id,
+      name: node.name,
+      branch_length: node.branch_length,
+      ...node
+    });
+    
+    // Only load orthogroups for species tree nodes
+    if (treeType === 'species' && node.id) {
+      setLoadingOrthogroups(true);
+      try {
+        // Fetch orthogroups for the selected node
+        const orthogroups = await searchOrthologue({ 
+          species: node.name || node.id, 
+          limit: 10 
+        });
+        
+        // Update the selected node with orthogroups data
+        setSelectedNode(prev => prev ? {
+          ...prev,
+          orthogroups: orthogroups.results
+        } : null);
+      } catch (err) {
+        console.error('Failed to load orthogroups:', err);
+      } finally {
+        setLoadingOrthogroups(false);
       }
-      
-      return result;
-    };
-    
-    return formatTaxoniumData(treeData);
+    }
   };
 
   return (
@@ -177,47 +199,171 @@ const PhylogeneticAnalysis: React.FC = () => {
       </Paper>
       
       {treeData && (
-        <Paper sx={{ p: 3 }}>
-          <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Typography variant="h6">Tree Visualization</Typography>
-            
-            <FormControl component="fieldset">
-              <RadioGroup
-                row
-                name="visualization-mode"
-                value={visualizationMode}
-                onChange={handleVisualizationModeChange}
-              >
-                <FormControlLabel 
-                  value="native" 
-                  control={<Radio />} 
-                  label="D3 Visualization" 
-                />
-                <FormControlLabel 
-                  value="taxonium" 
-                  control={<Radio />} 
-                  label="Taxonium" 
-                />
-              </RadioGroup>
-            </FormControl>
-          </Box>
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <Paper sx={{ p: 3, mb: 3 }}>
+              <Box sx={{ 
+                mb: 2, 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center',
+                flexWrap: 'wrap'
+              }}>
+                <Typography variant="h6">Tree Visualization</Typography>
+                
+                <Box>
+                  {/* Tree Type Selector */}
+                  <Tabs
+                    value={treeType}
+                    onChange={handleTreeTypeChange}
+                    sx={{ mr: 3, display: 'inline-flex' }}
+                  >
+                    <Tab value="species" label="Species Tree" />
+                    <Tab value="gene" label="Gene Tree" />
+                  </Tabs>
+                  
+                  {/* Visualization Mode Selector */}
+                  <FormControl component="fieldset">
+                    <RadioGroup
+                      row
+                      name="visualization-mode"
+                      value={visualizationMode}
+                      onChange={handleVisualizationModeChange}
+                    >
+                      <FormControlLabel 
+                        value="native" 
+                        control={<Radio />} 
+                        label="D3 Basic" 
+                      />
+                      <FormControlLabel 
+                        value="taxonium" 
+                        control={<Radio />} 
+                        label="Taxonium Iframe" 
+                      />
+                      <FormControlLabel 
+                        value="professional" 
+                        control={<Radio />} 
+                        label="Professional" 
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                </Box>
+              </Box>
+              
+              <Box sx={{ height: 600, width: '100%', overflow: 'hidden', border: '1px solid #e0e0e0' }}>
+                {visualizationMode === 'native' ? (
+                  <TaxoniumViewer 
+                    treeData={treeData}
+                    width={1100}
+                    height={580}
+                    colorBy="none"
+                  />
+                ) : visualizationMode === 'taxonium' ? (
+                  <TaxoniumIframeWrapper
+                    treeData={treeData}
+                    newick={newickData}
+                    onNodeSelect={handleNodeSelect}
+                    showMetadata={true}
+                  />
+                ) : (
+                  <SimpleTaxoniumWrapper
+                    treeData={treeData}
+                    newick={newickData}
+                    onNodeSelect={handleNodeSelect}
+                    colorBy={treeType === 'species' ? 'clade' : 'name'}
+                    config={{
+                      showMetadata: true,
+                      showLabels: true,
+                      initialMaxNodes: 1000,
+                      treePaintDate: true,
+                      // Scientific visualization settings
+                      scientificNotation: true,
+                      branchWidthFactor: 2,
+                      highlightSelectedPath: true
+                    }}
+                  />
+                )}
+              </Box>
+            </Paper>
+          </Grid>
           
-          <Box sx={{ height: 600, width: '100%', overflow: 'hidden', border: '1px solid #e0e0e0' }}>
-            {visualizationMode === 'native' ? (
-              <TaxoniumViewer 
-                treeData={treeData}
-                width={1100}
-                height={580}
-                colorBy="none"
-              />
-            ) : (
-              <TaxoniumIframeWrapper
-                treeData={prepareTaxoniumData()}
-                newick={newickData}
-              />
-            )}
-          </Box>
-        </Paper>
+          {/* Node Details Panel */}
+          {selectedNode && (
+            <Grid item xs={12}>
+              <Paper sx={{ p: 3 }}>
+                <Typography variant="h6" gutterBottom>
+                  Selected Node Details
+                </Typography>
+                
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={6}>
+                    <Card variant="outlined">
+                      <CardContent>
+                        <Typography variant="h6" color="primary">Basic Information</Typography>
+                        <Divider sx={{ my: 1 }} />
+                        
+                        <Box sx={{ mb: 1 }}>
+                          <Typography variant="subtitle2" display="inline">ID: </Typography>
+                          <Typography variant="body2" display="inline">
+                            {selectedNode.id || 'N/A'}
+                          </Typography>
+                        </Box>
+                        
+                        <Box sx={{ mb: 1 }}>
+                          <Typography variant="subtitle2" display="inline">Name: </Typography>
+                          <Typography variant="body2" display="inline">
+                            {selectedNode.name || 'Unnamed'}
+                          </Typography>
+                        </Box>
+                        
+                        <Box sx={{ mb: 1 }}>
+                          <Typography variant="subtitle2" display="inline">Branch Length: </Typography>
+                          <Typography variant="body2" display="inline">
+                            {selectedNode.branch_length?.toFixed(5) || 'N/A'}
+                          </Typography>
+                        </Box>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  
+                  {treeType === 'species' && (
+                    <Grid item xs={12} md={6}>
+                      <Card variant="outlined">
+                        <CardContent>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <Typography variant="h6" color="primary">Orthogroups</Typography>
+                            {loadingOrthogroups && <CircularProgress size={20} />}
+                          </Box>
+                          <Divider sx={{ my: 1 }} />
+                          
+                          {selectedNode.orthogroups ? (
+                            selectedNode.orthogroups.length > 0 ? (
+                              <Box component="ul" sx={{ pl: 2 }}>
+                                {selectedNode.orthogroups.map((og: any, index: number) => (
+                                  <Box component="li" key={index}>
+                                    <Typography variant="body2">
+                                      {og.id || og.name}: {og.gene_count || 0} genes
+                                    </Typography>
+                                  </Box>
+                                ))}
+                              </Box>
+                            ) : (
+                              <Typography variant="body2">No orthogroups found</Typography>
+                            )
+                          ) : (
+                            <Typography variant="body2" color="text.secondary">
+                              {loadingOrthogroups ? 'Loading...' : 'Click on a node to see orthogroups'}
+                            </Typography>
+                          )}
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  )}
+                </Grid>
+              </Paper>
+            </Grid>
+          )}
+        </Grid>
       )}
     </Box>
   );

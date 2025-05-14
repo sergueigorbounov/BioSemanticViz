@@ -277,4 +277,66 @@ async def get_example_tree():
         return JSONResponse(
             status_code=500,
             content={"detail": f"Error getting example tree: {str(e)}"}
-        ) 
+        )
+
+@router.post("/to_taxonium", response_model=Dict[str, Any])
+async def convert_to_taxonium(data: Dict[str, Any]):
+    """Convert a Newick tree to Taxonium-compatible format"""
+    try:
+        newick_str = data.get("newick")
+        if not newick_str:
+            raise HTTPException(status_code=400, detail="Newick string is required")
+        
+        # Parse the tree using ETE3
+        tree = Tree(newick_str, format=1)
+        
+        # Convert to Taxonium format
+        taxonium_data = {
+            "nodes": [],
+            "metadata": {
+                "colorings": [
+                    {
+                        "name": "orthologueCount",
+                        "type": "continuous"
+                    }
+                ]
+            }
+        }
+        
+        # Add node data in Taxonium format
+        node_id = 0
+        node_map = {}  # Map to keep track of node ids
+        
+        # Traverse the tree and build the nodes
+        for node in tree.traverse("preorder"):
+            # Create current node
+            current_id = node_id
+            node_id += 1
+            node_map[node] = current_id
+            
+            # Get parent id if it exists
+            parent_id = None
+            if node.up and node.up in node_map:
+                parent_id = node_map[node.up]
+            
+            # Add node to Taxonium data
+            taxonium_data["nodes"].append({
+                "id": current_id,
+                "parentId": parent_id,
+                "name": node.name or "",
+                "branch_length": node.dist,
+                "metadata": {
+                    "support": getattr(node, "support", None)
+                }
+            })
+        
+        # Add any additional metadata from the request
+        node_metadata = data.get("node_metadata", {})
+        for node_data in taxonium_data["nodes"]:
+            node_name = node_data["name"]
+            if node_name in node_metadata:
+                node_data["metadata"].update(node_metadata[node_name])
+        
+        return taxonium_data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error converting to Taxonium format: {str(e)}") 

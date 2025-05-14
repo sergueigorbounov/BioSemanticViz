@@ -5,6 +5,7 @@ import pandas as pd
 import logging
 from collections import defaultdict
 from ..models.phylo import OrthologueSearchRequest, OrthologueSearchResponse, OrthologueData, OrthoSpeciesCount
+from ete3 import Tree
 
 # Create router
 router = APIRouter(
@@ -257,4 +258,101 @@ async def get_orthologue_tree():
         return {
             "success": False,
             "message": f"Failed to load species tree: {str(e)}"
+        }
+
+@router.post("/search_taxonium", response_model=Dict[str, Any])
+async def search_orthologues_taxonium(request: OrthologueSearchRequest):
+    """Search for orthologues with Taxonium-compatible tree format"""
+    # First get regular orthologue search results
+    standard_response = await search_orthologues(request)
+    
+    if not standard_response.success:
+        return {
+            "success": False,
+            "message": standard_response.message
+        }
+    
+    try:
+        # Parse the tree using ETE3
+        tree_string = standard_response.newick_tree
+        tree = Tree(tree_string, format=1)
+        
+        # Convert to Taxonium format
+        taxonium_data = {
+            "nodes": [],
+            "metadata": {
+                "colorings": [
+                    {
+                        "name": "orthologueCount",
+                        "type": "continuous"
+                    }
+                ]
+            }
+        }
+        
+        # Create a map of species names to orthologue counts
+        species_counts = {item.species_name: item.count for item in standard_response.counts_by_species}
+        
+        # Add node data in Taxonium format
+        node_id = 0
+        node_map = {}  # Map to keep track of node ids
+        
+        # Traverse the tree and build the nodes
+        for node in tree.traverse("preorder"):
+            # Create current node
+            current_id = node_id
+            node_id += 1
+            node_map[node] = current_id
+            
+            # Get parent id if it exists
+            parent_id = None
+            if node.up and node.up in node_map:
+                parent_id = node_map[node.up]
+            
+            # Get orthologue count if this is a leaf node with a species name
+            orthologue_count = 0
+            if node.is_leaf():
+                # Try to map the node name to a full species name if needed
+                species_mapping = load_species_mapping()
+                node_name = node.name
+                
+                # Try different ways to match the node name to a species
+                if node_name in species_counts:
+                    orthologue_count = species_counts[node_name]
+                elif node_name in species_mapping['newick_to_full']:
+                    full_name = species_mapping['newick_to_full'][node_name]
+                    if full_name in species_counts:
+                        orthologue_count = species_counts[full_name]
+            
+            # Add node to Taxonium data
+            taxonium_data["nodes"].append({
+                "id": current_id,
+                "parentId": parent_id,
+                "name": node.name or "",
+                "branch_length": node.dist,
+                "orthologueCount": orthologue_count,
+                "metadata": {
+                    "support": getattr(node, "support", None),
+                    "orthologueCount": orthologue_count
+                }
+            })
+        
+        # Merge with original orthologue data
+        result = {
+            "success": True,
+            "gene_id": standard_response.gene_id,
+            "orthogroup_id": standard_response.orthogroup_id,
+            "orthologues": [ortho.dict() for ortho in standard_response.orthologues],
+            "counts_by_species": [count.dict() for count in standard_response.counts_by_species],
+            "newick_tree": tree_string,
+            "taxonium_tree": taxonium_data
+        }
+        
+        return result
+    except Exception as e:
+        logger.error(f"Error creating Taxonium format: {str(e)}")
+        return {
+            "success": False,
+            "message": f"Error creating Taxonium format: {str(e)}",
+            "regular_response": standard_response.dict()
         } 

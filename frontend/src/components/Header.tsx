@@ -16,7 +16,6 @@ const navLinks = [
   { name: 'Upload', path: '/upload' },
   { name: 'Explorer', path: '/explorer' },
   { name: 'Dashboard', path: '/dashboard' },
-  { name: 'Analytics', path: '/analytics' },
   { name: 'Phylogenetics', path: '/phylo' },
   { name: 'Orthologues', path: '/orthologues' },
 ];

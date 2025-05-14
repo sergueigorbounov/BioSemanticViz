@@ -15,10 +15,11 @@ import {
   Grid,
   Card,
   CardContent,
-  Divider
+  Divider,
+  Alert
 } from '@mui/material';
-import { OrthologueSearchResponse } from '../../api/orthologueClient';
-import PhylogeneticTreeView from './PhylogeneticTreeView';
+import { OrthologueSearchResponse, OrthoSpeciesCount } from '../../api/orthologueClient';
+import OrthologueVisualizer from './OrthologueVisualizer';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -50,20 +51,21 @@ interface OrthologueResultsProps {
   results: OrthologueSearchResponse;
 }
 
+// Define an OrthologueEntry type for rendering the table
+interface OrthologueEntry {
+  gene_id: string;
+  species_name: string;
+  species_id: string;
+  orthogroup_id: string;
+}
+
 const OrthologueResults: React.FC<OrthologueResultsProps> = ({ results }) => {
   const [tabValue, setTabValue] = useState<number>(0);
-  const [treeData, setTreeData] = useState<any | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    // Convert Newick tree data for visualization if available
-    if (results.newick_tree) {
-      // Simple mock tree structure - the PhylogeneticTreeView component 
-      // should handle conversion from Newick to a proper tree structure
-      setTreeData({
-        newick: results.newick_tree,
-        // This is just a placeholder - the component should handle actual conversion
-        rootNode: { id: 'root', name: 'root' } 
-      });
+    if (results.data) {
+      setLoading(false);
     }
   }, [results]);
 
@@ -71,26 +73,32 @@ const OrthologueResults: React.FC<OrthologueResultsProps> = ({ results }) => {
     setTabValue(newValue);
   };
 
+  // No data to display
+  if (!results.success || !results.counts_by_species) {
+    return (
+      <Alert severity="info">
+        No orthologue data available to display.
+      </Alert>
+    );
+  }
+
   return (
     <Box>
       <Grid container spacing={3} sx={{ mb: 3 }}>
         <Grid item xs={12} md={6}>
           <Card>
             <CardContent>
-              <Typography variant="h6" gutterBottom>Gene Information</Typography>
+              <Typography variant="h6" gutterBottom>Orthologue Information</Typography>
               <Divider sx={{ mb: 2 }} />
               <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                <Typography variant="body1">
-                  <strong>Gene ID:</strong> {results.gene_id}
-                </Typography>
                 <Typography variant="body1">
                   <strong>Orthogroup:</strong> {results.orthogroup_id || 'N/A'}
                 </Typography>
                 <Typography variant="body1">
-                  <strong>Total Orthologues:</strong> {results.orthologues.length}
+                  <strong>Total Orthologues:</strong> {results.total_count || 0}
                 </Typography>
                 <Typography variant="body1">
-                  <strong>Species Count:</strong> {results.counts_by_species.length}
+                  <strong>Species Count:</strong> {results.counts_by_species?.length || 0}
                 </Typography>
               </Box>
             </CardContent>
@@ -104,7 +112,7 @@ const OrthologueResults: React.FC<OrthologueResultsProps> = ({ results }) => {
               <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
                 {results.counts_by_species
                   .sort((a, b) => b.count - a.count)
-                  .map((species, index) => (
+                  .map((species: OrthoSpeciesCount, index: number) => (
                     <Chip 
                       key={index}
                       label={`${species.species_name}: ${species.count}`}
@@ -127,7 +135,7 @@ const OrthologueResults: React.FC<OrthologueResultsProps> = ({ results }) => {
           onChange={handleTabChange}
           aria-label="orthologue results tabs"
         >
-          <Tab label="Orthologues Table" />
+          <Tab label="Species Summary" />
           <Tab label="Phylogenetic Tree" />
         </Tabs>
 
@@ -136,19 +144,17 @@ const OrthologueResults: React.FC<OrthologueResultsProps> = ({ results }) => {
             <Table size="small">
               <TableHead>
                 <TableRow>
-                  <TableCell>Gene ID</TableCell>
-                  <TableCell>Species</TableCell>
+                  <TableCell>Species Name</TableCell>
                   <TableCell>Species ID</TableCell>
-                  <TableCell>Orthogroup</TableCell>
+                  <TableCell>Orthologue Count</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {results.orthologues.map((orthologue, index) => (
+                {results.counts_by_species.map((species: OrthoSpeciesCount, index: number) => (
                   <TableRow key={index}>
-                    <TableCell>{orthologue.gene_id}</TableCell>
-                    <TableCell>{orthologue.species_name}</TableCell>
-                    <TableCell>{orthologue.species_id}</TableCell>
-                    <TableCell>{orthologue.orthogroup_id}</TableCell>
+                    <TableCell>{species.species_name}</TableCell>
+                    <TableCell>{species.species_id}</TableCell>
+                    <TableCell>{species.count}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -157,15 +163,12 @@ const OrthologueResults: React.FC<OrthologueResultsProps> = ({ results }) => {
         </TabPanel>
 
         <TabPanel value={tabValue} index={1}>
-          <Box sx={{ height: '500px', width: '100%' }}>
-            {treeData ? (
-              <PhylogeneticTreeView 
-                newickData={results.newick_tree || ''}
-                speciesCounts={results.counts_by_species}
-              />
-            ) : (
-              <Typography variant="body1">No phylogenetic tree data available</Typography>
-            )}
+          <Box sx={{ height: '600px', width: '100%' }}>
+            <OrthologueVisualizer 
+              orthologues={results}
+              newickTree={results.data && results.data.length > 0 ? results.data[0] : null}
+              loading={loading}
+            />
           </Box>
         </TabPanel>
       </Paper>
@@ -173,4 +176,4 @@ const OrthologueResults: React.FC<OrthologueResultsProps> = ({ results }) => {
   );
 };
 
-export default OrthologueResults; 
+export default OrthologueResults;

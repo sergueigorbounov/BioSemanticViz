@@ -1,0 +1,14 @@
+{
+  "extends": [
+    "react-app",
+    "react-app/jest"
+  ],
+  "ignorePatterns": [
+    "src/lib/*.js",
+    "src/lib/*.umd.js"
+  ],
+  "rules": {
+    "no-restricted-globals": ["warn"],
+    "no-unused-expressions": ["warn"]
+  }
+} 

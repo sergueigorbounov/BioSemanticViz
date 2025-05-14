@@ -111,6 +111,73 @@ To convert a Flask route to FastAPI:
 - Add appropriate response_model annotations
 - Use Pydantic models for request/response data
 
+## Taxonium Integration
+
+To solve React compatibility issues with Taxonium (which requires React 17), a micro-frontend approach has been implemented. The `taxonium-wrapper` directory contains a separate React 17 application that runs on port 3002 and communicates with the main application through the postMessage API.
+
+### Running the Taxonium Wrapper
+
+1. Navigate to the taxonium-wrapper directory:
+```
+cd taxonium-wrapper
+```
+
+2. Install dependencies:
+```
+npm install
+```
+
+3. Start the development server:
+```
+npm start
+```
+
+Or simply use the start script:
+```
+./start.sh
+```
+
+The Taxonium wrapper will run on port 3002 and can be accessed by the main application through an iframe.
+
+### Architecture
+
+This approach solves the compatibility issues between Taxonium (which requires React 17) and the main application (which uses React 18) by:
+
+1. Isolating Taxonium in its own React 17 environment
+2. Using iframe for DOM isolation
+3. Communicating between the applications through the postMessage API
+
+This avoids conflicts between different React versions running in the same DOM.
+
+## Scientific Visualization Components
+
+### Taxonium Integration
+
+BioSemanticViz now includes a robust integration with Taxonium for advanced phylogenetic tree visualization. 
+This integration provides:
+
+- Reliable iframe-based integration that avoids React version conflicts
+- Full communication between components via the postMessage API
+- Error handling and graceful fallbacks
+- Multiple visualization modes for different use cases
+
+The Taxonium visualization is available in the Phylogenetic Analysis section of the application.
+
+#### Usage
+
+The integration offers three visualization modes:
+- **D3 Basic**: Simple D3-based tree visualization
+- **Taxonium Iframe**: Standard iframe integration 
+- **Professional**: Enhanced iframe integration with improved UI and error handling
+
+#### Technical Details
+
+The Taxonium integration uses a micro-frontend architecture pattern to solve React version compatibility issues:
+1. A separate lightweight React application runs in an isolated iframe
+2. Communication happens via the postMessage API
+3. UI consistency is maintained with shared styling
+4. Error boundaries prevent visualization issues from affecting the main application
+
 ## License
 
 MIT 

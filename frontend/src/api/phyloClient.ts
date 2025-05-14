@@ -123,14 +123,52 @@ export const uploadTreeFile = async (formData: FormData): Promise<{
   num_nodes: number
 }> => {
   try {
+    // Validate form data before sending
+    const file = formData.get('file') as File;
+    if (!file) {
+      throw new Error('No file provided');
+    }
+    
+    // Check file size (limit to 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      throw new Error('File too large (max 5MB)');
+    }
+    
+    // Check file type/extension
+    const validExtensions = ['.nwk', '.newick', '.tree', '.txt'];
+    const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
+    if (!validExtensions.includes(fileExtension)) {
+      throw new Error(`Invalid file type. Expected one of: ${validExtensions.join(', ')}`);
+    }
+
     const response = await phyloClient.post('/api/phylo/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
     });
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error uploading tree file:', error);
+    
+    // Provide more informative error messages based on the error type
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        const serverErrorMsg = error.response.data?.detail || 
+                               error.response.data?.message || 
+                               `Server error: ${error.response.status}`;
+        throw new Error(serverErrorMsg);
+      } else if (error.request) {
+        // The request was made but no response was received
+        throw new Error('No response from server. Please check your connection.');
+      } else {
+        // Something happened in setting up the request
+        throw new Error(`Request error: ${error.message}`);
+      }
+    }
+    
+    // For non-Axios errors, just pass through the error
     throw error;
   }
 };
