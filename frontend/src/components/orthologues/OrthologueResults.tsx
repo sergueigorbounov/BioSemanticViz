@@ -72,33 +72,21 @@ const OrthologueResults: React.FC<OrthologueResultsProps> = ({ results }) => {
     setSelectedSpecies(prevSelected => {
       const newSelected = prevSelected === species ? null : species;
       console.log(`Species selection changed from ${prevSelected} to ${newSelected}`);
-      
-      // Switch to appropriate tab based on source, unless clearing selection
-      if (newSelected !== null) {
-        // If selection came from summary or alignments, show the tree
-        if (source === 'summary' || source === 'alignments') {
-          setActiveTab(1); // Switch to Tree tab
-        }
-        // If selection came from tree, show the alignments
-        else if (source === 'tree' && activeTab !== 2) {
-          setActiveTab(2); // Switch to Alignments tab
-        }
-      }
-      
       return newSelected;
     });
-  }, [activeTab]);
+  }, []);  // No dependencies on activeTab since we don't switch tabs anymore
   
   // Handle species selection from the tree
   const handleTreeSpeciesSelected = useCallback((speciesName: string | null) => {
     console.log("Species selected from tree:", speciesName);
     if (speciesName) {
-      handleSpeciesClick(speciesName, 'tree');
+      // We don't use source anymore since we don't switch tabs
+      setSelectedSpecies(speciesName);
     } else {
       selectionSource.current = 'tree';
       setSelectedSpecies(null);
     }
-  }, [handleSpeciesClick]);
+  }, []);
   
   // Log when selectedSpecies changes for debugging
   useEffect(() => {
