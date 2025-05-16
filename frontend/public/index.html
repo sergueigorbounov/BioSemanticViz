@@ -2,77 +2,96 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.svg" />
+    <link rel="icon" href="./assets/logo.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#2196f3" />
     <meta
       name="description"
-      content="BioSemanticViz - Biological Intelligence Platform for Data Visualization and Semantic Reasoning"
+      content="BioSemanticViz - A tool for visualizing biological data relationships"
     />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.svg" />
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="apple-touch-icon" href="./assets/logo.svg" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="./manifest.json" />
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>BioSemanticViz</title>
+
+    <!-- Material UI Font -->
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
     />
-    <title>BioSemanticViz</title>
-    <script>
-      /**
-       * Create placeholder images at runtime if they don't exist
-       * This is a fallback and shouldn't be needed with our SVG files
-       */
-      function generatePlaceholderLogo(size) {
-        const canvas = document.createElement('canvas');
-        canvas.width = size;
-        canvas.height = size;
-        
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
-        
-        // Create gradient background
-        const gradient = ctx.createLinearGradient(0, 0, size, size);
-        gradient.addColorStop(0, '#2196f3');
-        gradient.addColorStop(1, '#1976d2');
-        
-        ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, size, size);
-        
-        // Add text
-        ctx.fillStyle = '#ffffff';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        
-        const fontSize = Math.floor(size / 4);
-        ctx.font = `bold ${fontSize}px Arial, sans-serif`;
-        
-        ctx.fillText('BSV', size / 2, size / 2);
-        
-        return canvas.toDataURL('image/png');
+    <!-- Material UI Icons -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+    />
+    <!-- Base CSS -->
+    <style>
+      html, body, #root {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        font-family: 'Roboto', sans-serif;
       }
       
-      // Set favicon dynamically if needed
-      const faviconLink = document.querySelector('link[rel="icon"]');
-      if (faviconLink) {
-        const favicon = new Image();
-        favicon.src = faviconLink.href;
-        favicon.onerror = function() {
-          faviconLink.href = generatePlaceholderLogo(32);
-        };
+      body {
+        background-color: #f5f5f5;
       }
       
-      // Set apple-touch-icon dynamically if needed
-      const appleIconLink = document.querySelector('link[rel="apple-touch-icon"]');
-      if (appleIconLink) {
-        const appleIcon = new Image();
-        appleIcon.src = appleIconLink.href;
-        appleIcon.onerror = function() {
-          appleIconLink.href = generatePlaceholderLogo(192);
-        };
+      .app-container {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
       }
-    </script>
+      
+      .main-content {
+        flex: 1;
+        padding: 20px;
+      }
+      
+      /* Customized scrollbar */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      
+      ::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      
+      ::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+      }
+      
+      ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` or `yarn start`.
+      To create a production bundle, use `npm run build` or `yarn build`.
+    -->
   </body>
 </html> 

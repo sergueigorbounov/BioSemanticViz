@@ -11,14 +11,15 @@ import {
   AlertTitle,
   Divider,
   IconButton,
+  TextField,
 } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import CloseIcon from '@mui/icons-material/Close';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { uploadData, handleApiError } from '../../services/api';
+import api from '../../services/api';
 
 const UploadPage: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
+  const [fileDescription, setFileDescription] = useState<string>('');
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -70,43 +71,38 @@ const UploadPage: React.FC = () => {
     }
   };
 
-  const handleUpload = async () => {
-    if (!file) return;
-
-    // Declare and initialize progressInterval so it's defined in the catch block
-    let progressInterval: ReturnType<typeof setInterval> = undefined as unknown as ReturnType<typeof setInterval>;
-    
-    try {
-      setUploading(true);
-      setError(null);
+  const handleUpload = async (e: React.FormEvent) => {
+    e.preventDefault();
       
-      // Simulate upload progress (in a real app, you might get this from the upload request)
-      progressInterval = setInterval(() => {
-        setUploadProgress(prev => {
-          if (prev >= 90) {
-            clearInterval(progressInterval);
-            return 90;
-          }
-          return prev + 10;
-        });
-      }, 300);
+    // Get the base URL from the api service
+    const backendUrl = api.defaults.baseURL;
 
-      // Make direct XMLHttpRequest instead of using Axios
+    if (!file) {
+      setError('Please select a file to upload');
+      return;
+    }
+
       const formData = new FormData();
       formData.append('file', file);
+    formData.append('description', fileDescription || '');
+
+    setUploading(true);
+    setUploadProgress(0);
       
+    try {
+      // Create XHR request for progress tracking
       const xhr = new XMLHttpRequest();
-      xhr.open('POST', 'http://localhost:8002/upload', true);
+      xhr.open('POST', `${backendUrl}/upload`, true);
       
-      // Add CORS headers
-      xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
-      xhr.setRequestHeader('Access-Control-Allow-Methods', 'POST');
-      xhr.setRequestHeader('Access-Control-Allow-Headers', 'Content-Type');
+      // Track progress
+      xhr.upload.onprogress = (e) => {
+        if (e.lengthComputable) {
+          const percentComplete = Math.round((e.loaded / e.total) * 100);
+          setUploadProgress(percentComplete);
+        }
+      };
       
       xhr.onload = function() {
-        clearInterval(progressInterval);
-        setUploadProgress(100);
-        
         if (xhr.status >= 200 && xhr.status < 300) {
           const result = JSON.parse(xhr.responseText);
           // Navigate to visualization page with the dataset ID
@@ -120,24 +116,18 @@ const UploadPage: React.FC = () => {
       };
       
       xhr.onerror = function() {
-        clearInterval(progressInterval);
-        setUploadProgress(0);
         setError('Connection error. Please ensure the backend server is running.');
         setUploading(false);
       };
       
       xhr.timeout = 20000; // 20 seconds (increased timeout)
       xhr.ontimeout = function() {
-        clearInterval(progressInterval);
-        setUploadProgress(0);
         setError('Request timed out. Please try again.');
         setUploading(false);
       };
       
       xhr.send(formData);
     } catch (err) {
-      clearInterval(progressInterval);
-      setUploadProgress(0);
       setError('An unexpected error occurred. Please try again.');
       setUploading(false);
     }
@@ -244,6 +234,22 @@ const UploadPage: React.FC = () => {
           </Box>
           
           <Divider sx={{ my: 2 }} />
+          
+          {/* Add file description field */}
+          {file && (
+            <Box sx={{ mb: 2 }}>
+              <TextField
+                fullWidth
+                label="File Description (optional)"
+                variant="outlined"
+                value={fileDescription}
+                onChange={(e) => setFileDescription(e.target.value)}
+                multiline
+                rows={2}
+                placeholder="Add a description for this file"
+              />
+            </Box>
+          )}
           
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
             {file && (

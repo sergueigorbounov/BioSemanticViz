@@ -1,8 +1,12 @@
 import axios, { AxiosResponse } from 'axios';
 import { Gene, SpeciesTreeData } from '../types/biology';
 
-// Define the backend URL based on environment
-const BACKEND_URL = 'http://localhost:8002';
+// Get API URL from environment variables with fallback
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 
+                   process.env.VITE_BACKEND_URL || 
+                   'http://localhost:8003';
+
+console.log('Using backend URL:', BACKEND_URL);
 
 // Define API response types
 export interface ProcessedData {
@@ -41,7 +45,7 @@ export interface VisualizationResult {
 
 // Create API client
 const apiClient = axios.create({
-  baseURL: BACKEND_URL, // Direct connection to the backend
+  baseURL: BACKEND_URL,
   headers: {
     'Content-Type': 'application/json',
     'Access-Control-Allow-Origin': '*'
@@ -205,3 +209,5 @@ export const fetchOrthogroupGenes = async (orthogroupId: string): Promise<Gene[]
   const response = await axios.get(`${BACKEND_URL}/api/orthogroup/${orthogroupId}`);
   return response.data;
 }; 
+
+export default apiClient; 

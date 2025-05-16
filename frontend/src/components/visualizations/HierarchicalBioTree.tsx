@@ -4,6 +4,7 @@ import { Box, CircularProgress, Button, TextField, InputAdornment } from '@mui/m
 import SearchIcon from '@mui/icons-material/Search';
 import axios from 'axios';
 import './HierarchicalBioTree.css';
+import api from '../../services/api';
 
 // Define the TreeNodeData interface
 export interface TreeNodeData {
@@ -163,7 +164,7 @@ const HierarchicalBioTree: React.FC<HierarchicalBioTreeProps> = ({
       // Load children based on node type
       if (node.type === 'species') {
         // Load orthogroups for this species
-        const response = await axios.get(`http://localhost:8002/api/species/${node.id}/orthogroups`);
+        const response = await api.get(`/api/species/${node.id}/orthogroups`);
         if (response.data.success) {
           const orthogroups = response.data.data.map((og: any) => ({
             id: og.id,
@@ -180,7 +181,7 @@ const HierarchicalBioTree: React.FC<HierarchicalBioTreeProps> = ({
       } 
       else if (node.type === 'orthogroup') {
         // Load genes for this orthogroup
-        const response = await axios.get(`http://localhost:8002/api/orthogroup/${node.id}/genes`);
+        const response = await api.get(`/api/orthogroup/${node.id}/genes`);
         if (response.data.success) {
           const genes = response.data.data.map((gene: any) => ({
             id: gene.id,

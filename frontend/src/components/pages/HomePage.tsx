@@ -8,10 +8,10 @@ import {
   Card,
   CardContent,
   Grid,
-  useTheme,
   Alert,
   Snackbar,
 } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import DataObjectIcon from '@mui/icons-material/DataObject';

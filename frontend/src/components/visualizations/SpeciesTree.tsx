@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect, useCallback, useState } from 'react';
 import { Box, Typography, Paper, CircularProgress } from '@mui/material';
 import * as d3 from 'd3';
 import { SpeciesTreeData } from '../../types/biology';
@@ -15,6 +15,21 @@ const SpeciesTree: React.FC<SpeciesTreeProps> = ({
   onOrthogroupSelect 
 }) => {
   const svgRef = useRef<SVGSVGElement>(null);
+  // Add state to track selected node ID
+  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+
+  // Function to get path to root for a given node
+  const getPathToRoot = useCallback((node: d3.HierarchyNode<any> | null): string[] => {
+    if (!node) return [];
+    
+    const path: string[] = [];
+    let current: d3.HierarchyNode<any> | null = node;
+    while (current) {
+      path.push(current.data.id);
+      current = current.parent;
+    }
+    return path;
+  }, []);
 
   const renderTree = useCallback(() => {
     if (!svgRef.current || !treeData) return;
@@ -41,19 +56,41 @@ const SpeciesTree: React.FC<SpeciesTreeProps> = ({
     const g = svg.append('g')
       .attr('transform', `translate(${margin.left},${margin.top})`);
 
+    // Get path to root for highlighting
+    const highlightPath = selectedNodeId ? 
+      getPathToRoot(root.descendants().find(d => d.data.id === selectedNodeId) || null) : 
+      [];
+
     // Add links
     g.selectAll('.link')
       .data(root.links())
       .enter()
       .append('path')
       .attr('class', 'link')
-      .attr('d', d3.linkHorizontal<any, any>()
-        .x((d: any) => d.y)
-        .y((d: any) => d.x)
-      )
+      .attr('d', (d: any) => {
+        // Use rectangular/square-angled path instead of curved links
+        return `M${d.source.y},${d.source.x}
+                L${d.source.y},${d.target.x}
+                L${d.target.y},${d.target.x}`;
+      })
       .attr('fill', 'none')
       .attr('stroke', '#ccc')
-      .attr('stroke-width', 1.5);
+      .attr('stroke-width', (d: any) => {
+        // Thicken the line if it's part of the path to root
+        if (highlightPath.includes(d.source.data.id) && 
+            highlightPath.includes(d.target.data.id)) {
+          return 3;
+        }
+        return 1.5;
+      })
+      .attr('stroke-opacity', (d: any) => {
+        // Make highlighted path more opaque
+        if (highlightPath.includes(d.source.data.id) && 
+            highlightPath.includes(d.target.data.id)) {
+          return 1;
+        }
+        return 0.7;
+      });
 
     // Add nodes
     const node = g.selectAll('.node')
@@ -63,6 +100,9 @@ const SpeciesTree: React.FC<SpeciesTreeProps> = ({
       .attr('class', 'node')
       .attr('transform', (d: any) => `translate(${d.y},${d.x})`)
       .on('click', (event, d: any) => {
+        // Set this node as selected (or toggle off if already selected)
+        setSelectedNodeId(d.data.id === selectedNodeId ? null : d.data.id);
+        
         // Determine if this is a species node or orthogroup node
         const isSpecies = d.data.type === 'species';
         if (isSpecies && onSpeciesSelect) {
@@ -74,10 +114,16 @@ const SpeciesTree: React.FC<SpeciesTreeProps> = ({
 
     // Add node circles
     node.append('circle')
-      .attr('r', 5)
-      .attr('fill', (d: any) => d.data.type === 'species' ? '#4caf50' : '#2196f3')
-      .attr('stroke', '#fff')
-      .attr('stroke-width', 1.5);
+      .attr('r', (d: any) => highlightPath.includes(d.data.id) ? 7 : 5)
+      .attr('fill', (d: any) => {
+        // Use brighter color for highlighted nodes
+        if (highlightPath.includes(d.data.id)) {
+          return d.data.type === 'species' ? '#2e7d32' : '#1565c0';
+        }
+        return d.data.type === 'species' ? '#4caf50' : '#2196f3';
+      })
+      .attr('stroke', (d: any) => highlightPath.includes(d.data.id) ? '#fff' : '#eee')
+      .attr('stroke-width', (d: any) => highlightPath.includes(d.data.id) ? 2 : 1.5);
 
     // Add node labels
     node.append('text')
@@ -86,14 +132,15 @@ const SpeciesTree: React.FC<SpeciesTreeProps> = ({
       .attr('text-anchor', (d: any) => d.children ? 'end' : 'start')
       .text((d: any) => d.data.name)
       .attr('font-size', '12px')
-      .attr('fill', '#333');
-  }, [treeData, onSpeciesSelect, onOrthogroupSelect]);
+      .attr('font-weight', (d: any) => highlightPath.includes(d.data.id) ? 'bold' : 'normal')
+      .attr('fill', (d: any) => highlightPath.includes(d.data.id) ? '#000' : '#333');
+  }, [treeData, onSpeciesSelect, onOrthogroupSelect, selectedNodeId, getPathToRoot]);
 
   useEffect(() => {
     if (treeData && svgRef.current) {
       renderTree();
     }
-  }, [treeData, renderTree]);
+  }, [treeData, renderTree, selectedNodeId]);
 
   if (!treeData) {
     return (

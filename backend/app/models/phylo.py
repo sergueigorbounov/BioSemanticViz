@@ -25,8 +25,8 @@ class PhyloNodeData(BaseModel):
     class Config:
         from_attributes = True
 
-# Needed for recursive type definition
-PhyloNodeData.model_rebuild()
+# Handle recursive type definition in Pydantic v2
+PhyloNodeData.update_forward_refs()
 
 class TreeData(BaseModel):
     """Model for tree data"""

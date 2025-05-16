@@ -1,19 +1,19 @@
 {
   "short_name": "BioSemanticViz",
-  "name": "BioSemanticViz - Biological Intelligence Platform",
+  "name": "BioSemanticViz - Biological Data Visualization",
   "icons": [
     {
-      "src": "favicon.svg",
+      "src": "assets/logo.svg",
       "sizes": "64x64 32x32 24x24 16x16",
       "type": "image/svg+xml"
     },
     {
-      "src": "logo192.svg",
+      "src": "assets/logo.svg",
       "type": "image/svg+xml",
       "sizes": "192x192"
     },
     {
-      "src": "logo192.svg",
+      "src": "assets/logo.svg",
       "type": "image/svg+xml",
       "sizes": "512x512"
     }
@@ -21,5 +21,5 @@
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#2196f3",
-  "background_color": "#f5f7fa"
+  "background_color": "#ffffff"
 } 

@@ -15,8 +15,8 @@ import {
   Tab,
   Button,
   Chip,
-  useTheme
 } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import axios from 'axios';
 import {
   BarChart,

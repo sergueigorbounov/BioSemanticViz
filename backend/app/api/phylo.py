@@ -10,8 +10,12 @@ import pathlib
 from Bio import Phylo
 try:
     from ete3 import Tree, TreeStyle, NodeStyle, faces, AttrFace
+    HAS_ETE3 = True
 except ImportError:
-    raise ImportError("ETE Toolkit not installed. Please install it with 'pip install ete3==3.1.1'")
+    print("Warning: ETE Toolkit not installed. Some functionality will be limited.")
+    HAS_ETE3 = False
+    # Don't raise an error, just continue with limited functionality
+    # raise ImportError("ETE Toolkit not installed. Please install it with 'pip install ete3==3.1.1'")
 
 from ..models.phylo import PhyloNodeData, TreeData, newick_to_dict, NodeMutation
 

@@ -1,5 +1,10 @@
 import React from 'react';
-import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from 'react-router-dom';
+import { 
+  Route, 
+  createBrowserRouter, 
+  createRoutesFromElements, 
+  RouterProvider 
+} from 'react-router-dom';
 import HomePage from './components/pages/HomePage';
 import UploadPage from './components/pages/UploadPage';
 import VisualizePage from './components/pages/VisualizationPage';

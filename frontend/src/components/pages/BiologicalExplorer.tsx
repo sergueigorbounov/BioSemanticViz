@@ -22,6 +22,7 @@ import axios from 'axios';
 import { SpeciesTreeData } from '../../types/biology';
 import HierarchicalBioTree, { TreeNodeData } from '../visualizations/HierarchicalBioTree';
 import TaxoniumViewer from '../visualizations/TaxoniumViewer';
+import api from '../../services/api';
 
 // Types for our biological entities
 interface Species {
@@ -56,13 +57,7 @@ enum ViewState {
 }
 
 // Create API client
-const apiClient = axios.create({
-  baseURL: 'http://localhost:8002',
-  headers: {
-    'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*'
-  }
-});
+const client = api;
 
 const BiologicalExplorer: React.FC = () => {
   // State management
@@ -86,13 +81,13 @@ const BiologicalExplorer: React.FC = () => {
       setError(null);
       
       try {
-        const response = await apiClient.get('/api/species-tree');
-        setSpeciesData(response.data);
-      } catch (err) {
-        setError('Failed to load species data');
-        console.error(err);
-      } finally {
+        const response = await client.get('/api/species-tree');
         setLoading(false);
+        setSpeciesData(response.data);
+      } catch (error) {
+        console.error(error);
+        setLoading(false);
+        setError('Failed to load species tree data');
       }
     };
 
@@ -104,14 +99,14 @@ const BiologicalExplorer: React.FC = () => {
     setLoading(true);
     try {
       // First get the species details
-      const speciesResponse = await apiClient.get(`/api/species/${speciesId}`);
+      const speciesResponse = await client.get(`/api/species/${speciesId}`);
       if (speciesResponse.data?.success && speciesResponse.data.data.length > 0) {
         const species = speciesResponse.data.data[0];
         setSelectedSpecies(species);
         setCurrentView(ViewState.ORTHOGROUP_VIEW);
         
         // Then get the orthogroups
-        const response = await apiClient.get(`/api/species/${speciesId}/orthogroups`);
+        const response = await client.get(`/api/species/${speciesId}/orthogroups`);
         if (response.data?.success) {
           setOrthogroups(response.data.data);
         } else {
@@ -133,14 +128,14 @@ const BiologicalExplorer: React.FC = () => {
     setLoading(true);
     try {
       // First get the orthogroup details
-      const ogResponse = await apiClient.get(`/api/orthogroup/${orthogroupId}`);
+      const ogResponse = await client.get(`/api/orthogroup/${orthogroupId}`);
       if (ogResponse.data?.success && ogResponse.data.data.length > 0) {
         const orthogroup = ogResponse.data.data[0];
         setSelectedOrthogroup(orthogroup);
         setCurrentView(ViewState.GENE_VIEW);
         
         // Then get the genes
-        const response = await apiClient.get(`/api/orthogroup/${orthogroupId}/genes`);
+        const response = await client.get(`/api/orthogroup/${orthogroupId}/genes`);
         if (response.data?.success) {
           setGenes(response.data.data);
         } else {
@@ -161,7 +156,7 @@ const BiologicalExplorer: React.FC = () => {
   const handleGeneSelect = async (geneId: string) => {
     setLoading(true);
     try {
-      const response = await apiClient.get(`/api/gene/${geneId}`);
+      const response = await client.get(`/api/gene/${geneId}`);
       if (response.data?.success && response.data.data) {
         setSelectedGene(response.data.data);
         setCurrentView(ViewState.GENE_DETAILS);

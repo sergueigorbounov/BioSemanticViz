@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect, useCallback, useState } from 'react';
 import * as d3 from 'd3';
 import { Box, Typography, CircularProgress } from '@mui/material';
 
@@ -19,6 +19,23 @@ interface PhylogeneticTreeProps {
 
 const PhylogeneticTree: React.FC<PhylogeneticTreeProps> = ({ data, loading, error }) => {
   const svgRef = useRef<SVGSVGElement>(null);
+  // Add state to track selected node
+  const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
+  
+  // Function to get path from a node to root
+  const getPathToRoot = useCallback((node: d3.HierarchyNode<TreeNode> | null): string[] => {
+    if (!node) return [];
+    
+    const path: string[] = [];
+    let current: d3.HierarchyNode<TreeNode> | null = node;
+    
+    while (current) {
+      path.push(current.data.id || current.data.name);
+      current = current.parent;
+    }
+    
+    return path;
+  }, []);
   
   const renderTree = useCallback((treeData: TreeNode) => {
     if (!svgRef.current) return;
@@ -38,6 +55,7 @@ const PhylogeneticTree: React.FC<PhylogeneticTreeProps> = ({ data, loading, erro
     
     // Create an SVG element
     const svg = d3.select(svgRef.current);
+    svg.selectAll('*').remove();
     
     // Create a group for the tree
     const g = svg
@@ -53,18 +71,43 @@ const PhylogeneticTree: React.FC<PhylogeneticTreeProps> = ({ data, loading, erro
         })
     );
     
+    // Get the path to highlight if a node is selected
+    const highlightPath = selectedNodeId ? 
+      getPathToRoot(treeRoot.descendants().find(d => (d.data.id || d.data.name) === selectedNodeId) || null) : 
+      [];
+    
     // Add links between nodes
     g.selectAll('.link')
       .data(treeRoot.links())
       .enter()
       .append('path')
       .attr('class', 'link')
-      .attr('d', d3.linkHorizontal<d3.HierarchyPointLink<TreeNode>, d3.HierarchyPointNode<TreeNode>>()
-        .x(d => d.y)
-        .y(d => d.x))
+      .attr('d', (d) => {
+        // Use rectangular/square-angled path instead of curved links
+        return `M${d.source.y},${d.source.x}
+                L${d.source.y},${d.target.x}
+                L${d.target.y},${d.target.x}`;
+      })
       .attr('fill', 'none')
       .attr('stroke', '#aaa')
-      .attr('stroke-width', 1.5);
+      .attr('stroke-width', (d) => {
+        // Thicken the line if it's part of the path to root
+        const sourceId = d.source.data.id || d.source.data.name;
+        const targetId = d.target.data.id || d.target.data.name;
+        if (highlightPath.includes(sourceId) && highlightPath.includes(targetId)) {
+          return 3;
+        }
+        return 1.5;
+      })
+      .attr('stroke-opacity', (d) => {
+        // Make highlighted path more opaque
+        const sourceId = d.source.data.id || d.source.data.name;
+        const targetId = d.target.data.id || d.target.data.name;
+        if (highlightPath.includes(sourceId) && highlightPath.includes(targetId)) {
+          return 1;
+        }
+        return 0.7;
+      });
     
     // Create node groups
     const nodes = g.selectAll('.node')
@@ -72,14 +115,36 @@ const PhylogeneticTree: React.FC<PhylogeneticTreeProps> = ({ data, loading, erro
       .enter()
       .append('g')
       .attr('class', 'node')
-      .attr('transform', d => `translate(${d.y}, ${d.x})`);
+      .attr('transform', d => `translate(${d.y}, ${d.x})`)
+      .on('click', (event, d) => {
+        // Toggle node selection
+        const nodeId = d.data.id || d.data.name;
+        setSelectedNodeId(nodeId === selectedNodeId ? null : nodeId);
+      });
     
     // Add node circles
     nodes.append('circle')
-      .attr('r', 5)
-      .attr('fill', d => getColorByType(d.data.type))
-      .attr('stroke', '#fff')
-      .attr('stroke-width', 1.5);
+      .attr('r', d => {
+        const nodeId = d.data.id || d.data.name;
+        return highlightPath.includes(nodeId) ? 7 : 5;
+      })
+      .attr('fill', d => {
+        const nodeId = d.data.id || d.data.name;
+        if (highlightPath.includes(nodeId)) {
+          // Use a darker shade for highlighted nodes
+          const baseColor = getColorByType(d.data.type);
+          return d3.color(baseColor)?.darker(0.5).toString() || baseColor;
+        }
+        return getColorByType(d.data.type);
+      })
+      .attr('stroke', d => {
+        const nodeId = d.data.id || d.data.name;
+        return highlightPath.includes(nodeId) ? '#fff' : '#eee';
+      })
+      .attr('stroke-width', d => {
+        const nodeId = d.data.id || d.data.name;
+        return highlightPath.includes(nodeId) ? 2 : 1.5;
+      });
     
     // Add node labels
     nodes.append('text')
@@ -87,9 +152,21 @@ const PhylogeneticTree: React.FC<PhylogeneticTreeProps> = ({ data, loading, erro
       .attr('x', d => d.children ? -8 : 8)
       .attr('text-anchor', d => d.children ? 'end' : 'start')
       .text(d => truncateLabel(d.data.name))
+      .attr('font-size', d => {
+        const nodeId = d.data.id || d.data.name;
+        return highlightPath.includes(nodeId) ? '12px' : '10px';
+      })
+      .attr('font-weight', d => {
+        const nodeId = d.data.id || d.data.name;
+        return highlightPath.includes(nodeId) ? 'bold' : 'normal';
+      })
+      .attr('fill', d => {
+        const nodeId = d.data.id || d.data.name;
+        return highlightPath.includes(nodeId) ? '#000' : '#333';
+      })
       .append('title')  // Add tooltip with full name
       .text(d => d.data.name);
-  }, []);
+  }, [selectedNodeId, getPathToRoot]);
   
   useEffect(() => {
     if (!data || loading || error) return;
@@ -101,7 +178,7 @@ const PhylogeneticTree: React.FC<PhylogeneticTreeProps> = ({ data, loading, erro
     
     // Create the tree visualization
     renderTree(data);
-  }, [data, loading, error, renderTree]);
+  }, [data, loading, error, renderTree, selectedNodeId]);
   
   const getColorByType = (type?: string): string => {
     if (!type) return '#999';
