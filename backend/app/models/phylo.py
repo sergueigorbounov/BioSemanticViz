@@ -76,43 +76,45 @@ class CompareRequest(BaseModel):
     tree2_newick: str
     comparison_method: Optional[str] = "robinson-foulds"
 
-class PhyloNode(BaseModel):
+class PhylogeneticNode(BaseModel):
     """Model for a node in a phylogenetic tree"""
     id: str
-    name: Optional[str] = None
+    name: str
     length: Optional[float] = None
-    parent: Optional[str] = None
-    children: List[str] = []
-    annotations: Dict[str, Any] = {}
-    
+    children: Optional[List['PhylogeneticNode']] = None
+    metadata: Optional[Dict[str, Any]] = None
+
 class PhyloTree(BaseModel):
     """Model for a phylogenetic tree"""
-    nodes: Dict[str, PhyloNode]
+    nodes: Dict[str, PhylogeneticNode]
     root_id: str
     
+class OrthoSpeciesCount(BaseModel):
+    """Model for species orthologues count"""
+    species_id: str
+    species_name: str
+    count: int
+    metadata: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Additional metadata for visualization")
+
 class OrthologueSearchRequest(BaseModel):
     """Request model for orthologue search"""
     gene_id: str
-    
+
 class OrthologueData(BaseModel):
     """Model for orthologue data"""
     gene_id: str
     species_id: str
     species_name: str
     orthogroup_id: str
-    
-class OrthoSpeciesCount(BaseModel):
-    """Model for counting orthologues per species"""
-    species_id: str
-    species_name: str
-    count: int
-    
+    metadata: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Additional metadata")
+
 class OrthologueSearchResponse(BaseModel):
     """Response model for orthologue search"""
     success: bool
     gene_id: str
     orthogroup_id: Optional[str] = None
-    orthologues: List[OrthologueData] = []
-    counts_by_species: List[OrthoSpeciesCount] = []
+    orthologues: List[OrthologueData] = Field(default_factory=list)
+    counts_by_species: List[OrthoSpeciesCount] = Field(default_factory=list)
     newick_tree: Optional[str] = None
+    tree_metadata: Optional[Dict[str, Any]] = Field(default_factory=dict, description="Additional tree metadata for visualization")
     message: Optional[str] = None 

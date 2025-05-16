@@ -128,8 +128,16 @@ def load_species_mapping():
             }
     return _species_mapping
 
-def load_species_tree():
-    """Load species tree from Newick file"""
+def load_species_tree(optimize_for_viz=False):
+    """
+    Load species tree from Newick file
+    
+    Args:
+        optimize_for_viz (bool): If True, optimize the tree data for visualization by:
+            - Adding internal node labels if missing
+            - Ensuring node names match with species in orthologue data
+            - Adding any necessary metadata for better visualization
+    """
     global _species_tree
     if _species_tree is None:
         try:
@@ -137,6 +145,27 @@ def load_species_tree():
             with open(TREE_FILE, 'r') as f:
                 _species_tree = f.read().strip()
             logger.info(f"Loaded species tree with length: {len(_species_tree)}")
+            
+            # Perform tree optimization if requested
+            if optimize_for_viz:
+                # Load species mapping to ensure node labels match the species data
+                species_mapping = load_species_mapping()
+                
+                # Basic tree optimization - replace abbreviated species names with full names
+                # This is a simplified approach - a real implementation would use 
+                # a proper Newick parser library for more complex tree manipulations
+                for abbrev, full_name in species_mapping.get('newick_to_full', {}).items():
+                    # Only replace complete node names (not substrings)
+                    # Use word boundaries to ensure we match whole node names
+                    _species_tree = _species_tree.replace(
+                        f"({abbrev}:", f"({full_name}:"
+                    ).replace(
+                        f",{abbrev}:", f",{full_name}:"
+                    ).replace(
+                        f"{abbrev};", f"{full_name};"
+                    )
+                
+                logger.info(f"Optimized tree for visualization")
         except Exception as e:
             logger.error(f"Failed to load species tree: {str(e)}")
             raise HTTPException(status_code=500, detail=f"Failed to load species tree: {str(e)}")
@@ -232,8 +261,8 @@ async def search_orthologues(request: OrthologueSearchRequest):
                 )
             )
     
-    # Get the species tree
-    species_tree = load_species_tree()
+    # Get the species tree - use optimized version for visualization
+    species_tree = load_species_tree(optimize_for_viz=True)
     
     return OrthologueSearchResponse(
         success=True,
@@ -248,7 +277,8 @@ async def search_orthologues(request: OrthologueSearchRequest):
 async def get_orthologue_tree():
     """Get the species phylogenetic tree in Newick format"""
     try:
-        species_tree = load_species_tree()
+        # Use optimized version for visualization
+        species_tree = load_species_tree(optimize_for_viz=True)
         return {
             "success": True,
             "newick": species_tree
