@@ -5,6 +5,9 @@
 /simple-taxonium/node_modules
 /taxonium-integration/node_modules
 /taxonium-wrapper/node_modules
+**/node_modules/
+node_modules/
+**/node_modules/**/*
 /.pnp
 .pnp.js
 
