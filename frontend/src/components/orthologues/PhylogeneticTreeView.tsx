@@ -28,7 +28,15 @@ const PhylogeneticTreeView: React.FC<PhylogeneticTreeViewProps> = ({
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (loading || !orthologues || !newickTree) {
+    // Reset error state on new data
+    setError(null);
+    
+    if (loading) {
+      return;
+    }
+
+    if (!orthologues || !newickTree) {
+      // Don't set error for empty data
       return;
     }
 
@@ -211,9 +219,10 @@ const PhylogeneticTreeView: React.FC<PhylogeneticTreeViewProps> = ({
       });
   };
 
+  // Render different states based on loading, error or data
   if (loading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', p: 3 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
         <CircularProgress />
       </Box>
     );
@@ -221,23 +230,60 @@ const PhylogeneticTreeView: React.FC<PhylogeneticTreeViewProps> = ({
 
   if (error) {
     return (
-      <Box sx={{ p: 3 }}>
+      <Box sx={{ p: 2 }}>
         <Alert severity="error">{error}</Alert>
       </Box>
     );
   }
 
-  if (!newickTree || !orthologues || !orthologues.success) {
+  if (!orthologues || !newickTree) {
     return (
-      <Box sx={{ p: 3 }}>
-        <Typography>No phylogenetic tree or orthologues data available</Typography>
+      <Box sx={{ p: 2, textAlign: 'center' }}>
+        <Typography variant="body1">No phylogenetic data available. Please select a gene or protein.</Typography>
       </Box>
     );
   }
 
   return (
-    <Box sx={{ overflowX: 'auto', width: '100%' }}>
-      <svg ref={svgRef} width="900" height="600" />
+    <Box sx={{ height: '100%', width: '100%', position: 'relative' }}>
+      {/* Tree Display Controls */}
+      {/* ... existing controls ... */}
+      
+      <Box sx={{ 
+        width: '100%', 
+        height: '100%', 
+        overflow: 'auto',
+        '&::-webkit-scrollbar': {
+          width: '10px',
+          height: '10px',
+        },
+        '&::-webkit-scrollbar-thumb': {
+          backgroundColor: 'rgba(0,0,0,0.2)',
+          borderRadius: '5px',
+        }
+      }}>
+        <svg 
+          ref={svgRef} 
+          width="100%" 
+          height="100%"
+          style={{ cursor: 'grab', minHeight: "600px" }}
+        />
+      </Box>
+      
+      <Typography 
+        variant="caption" 
+        component="div"
+        sx={{ 
+          position: 'absolute', 
+          bottom: 5, 
+          left: 5, 
+          background: 'rgba(255,255,255,0.7)',
+          padding: '2px 5px',
+          borderRadius: '4px'
+        }}
+      >
+        <strong>Tips:</strong> Scroll to zoom, drag to pan, click nodes to select, double-click to reset view.
+      </Typography>
     </Box>
   );
 };
