@@ -1,11 +1,12 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const webpack = require('webpack');
 
 module.exports = (env, argv) => {
   const isProduction = argv.mode === 'production';
   
   return {
-    entry: './src/index.js',
+    entry: ['./src/toPropertyKeyPolyfill.js', './src/index.js'],
     output: {
       path: path.resolve(__dirname, 'dist'),
       filename: 'bundle.js',
@@ -32,7 +33,8 @@ module.exports = (env, argv) => {
           use: {
             loader: 'babel-loader',
             options: {
-              presets: ['@babel/preset-env', '@babel/preset-react']
+              presets: ['@babel/preset-env', '@babel/preset-react'],
+              plugins: ['@babel/plugin-transform-runtime']
             }
           }
         },
@@ -47,12 +49,20 @@ module.exports = (env, argv) => {
       alias: {
         'react': path.resolve('./node_modules/react'),
         'react-dom': path.resolve('./node_modules/react-dom'),
+      },
+      fallback: {
+        "path": false,
+        "fs": false,
+        "os": false
       }
     },
     plugins: [
       new HtmlWebpackPlugin({
         template: './public/index.html',
         filename: 'index.html'
+      }),
+      new webpack.ProvidePlugin({
+        toPropertyKey: [path.resolve(__dirname, 'src/toPropertyKeyPolyfill.js'), 'toPropertyKey']
       })
     ],
     devtool: isProduction ? 'source-map' : 'eval-source-map'

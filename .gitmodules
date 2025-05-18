@@ -1,0 +1,3 @@
+[submodule "taxonium-integration/taxonium"]
+	path = taxonium-integration/taxonium
+	url = https://github.com/theosanderson/taxonium.git

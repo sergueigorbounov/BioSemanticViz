@@ -12,12 +12,16 @@
   "license": "ISC",
   "description": "Taxonium micro-frontend with React 17",
   "dependencies": {
+    "@babel/runtime": "^7.27.1",
+    "core-js": "^3.42.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "socket.io-client": "^4.8.1",
     "taxonium-component": "^2.0.227"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
+    "@babel/plugin-transform-runtime": "^7.24.0",
     "@babel/preset-env": "^7.24.0",
     "@babel/preset-react": "^7.23.3",
     "babel-loader": "^9.1.3",
