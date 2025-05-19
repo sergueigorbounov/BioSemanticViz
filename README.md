@@ -1,6 +1,135 @@
 # BioSemanticViz
 
-BioSemanticViz is a web application for visualizing and exploring biological data with semantic reasoning capabilities.
+BioSemanticViz est une plateforme complète pour la visualisation et l'analyse de données biologiques, avec un accent particulier sur les orthologues et les relations phylogénétiques. Elle s'appuie sur des technologies modernes (React, FastAPI, Docker) et intègre la bibliothèque ETE Toolkit (sous licence GPLv3) pour la manipulation et la visualisation d'arbres phylogénétiques.
+
+## Démarrage rapide avec Docker
+
+La manière la plus simple d'utiliser BioSemanticViz est via Docker :
+
+1. Assurez-vous d'avoir Docker et Docker Compose installés
+2. Clonez ce dépôt
+3. Lancez le script principal :
+
+```bash
+./start-docker.sh
+```
+
+4. Ouvrez votre navigateur sur http://localhost
+
+---
+
+## 🏛️ Architecture & Stack technique
+
+### Vue d'ensemble
+L'architecture de BioSemanticViz repose sur une approche microservices orchestrée par Docker :
+
+```
++-------------------+        +-------------------+        +-------------------+
+|   Frontend (React)| <----> |    Nginx Proxy    | <----> |  Backend (FastAPI)|
++-------------------+        +-------------------+        +-------------------+
+        |                        |                        |
+        |                        |                        |
+        +------------------------+------------------------+
+                                 |
+                        +-------------------+
+                        |   Data/Volumes    |
+                        +-------------------+
+```
+
+### Composants principaux
+- **Frontend** :  React + TypeScript, MUI, D3.js, Axios, React Router, Jest, React Testing Library, Cypress (E2E)  
+  **Licence** : MIT
+- **Backend** :  FastAPI (Python), Pandas, ETE Toolkit (phylogénie), Biopython, Pytest  
+  **Licence** : GPLv3 (à cause d'ETE Toolkit)
+- **Reverse Proxy** :  Nginx (pour servir le frontend et router les requêtes API)  
+  **Licence** : 2-clause BSD
+- **Orchestration** :  Docker & Docker Compose  
+  **Licence** : Apache 2.0
+- **Données** :  Fichiers Orthogroups, arbres Newick, mapping espèces, etc.
+
+### Licences des principaux composants
+| Composant         | Licence   | Lien                                      |
+|-------------------|-----------|-------------------------------------------|
+| BioSemanticViz    | GPLv3     | (ce projet, voir LICENSE)                 |
+| ETE Toolkit       | GPLv3     | http://etetoolkit.org/                    |
+| FastAPI           | MIT       | https://github.com/tiangolo/fastapi       |
+| React             | MIT       | https://react.dev/                        |
+| D3.js             | BSD-3     | https://d3js.org/                         |
+| Nginx             | BSD-2     | https://nginx.org/                        |
+| Docker            | Apache 2  | https://www.docker.com/                   |
+| Pandas            | BSD-3     | https://pandas.pydata.org/                |
+| Biopython         | MIT       | https://biopython.org/                    |
+
+> **Remarque** : L'utilisation d'ETE Toolkit (GPLv3) impose que tout le projet soit distribué sous GPLv3.
+
+---
+
+## Manual Setup
+
+If you prefer not to use Docker, you can set up the application manually:
+
+### Backend Setup
+
+```bash
+cd backend
+pip install -r requirements.txt
+python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8002
+```
+
+### Frontend Setup
+
+```bash
+cd frontend
+npm install
+npm start
+```
+
+## Development
+
+For development purposes, you can use the development script:
+
+```bash
+./dev.sh
+```
+
+This will start both frontend and backend in development mode with hot reloading.
+
+## Testing
+
+We use a test-driven development (TDD) approach. To run tests:
+
+```bash
+# Run all tests
+./run-all-tests.sh
+
+# Run frontend tests only
+cd frontend && npm test
+
+# Run backend tests only
+./python-tests.sh
+
+# Run end-to-end tests
+./e2e.sh
+
+# Start TDD development mode (tests in watch mode)
+./tdd.sh
+```
+
+For more information about our testing approach, see:
+- [TDD Workflow](docs/TDD_WORKFLOW.md)
+- [Testing Strategy](docs/TESTING_STRATEGY.md)
+
+## Configuration
+
+Configuration is handled through environment variables. See the docker-compose.yml file for available options.
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Features
 
