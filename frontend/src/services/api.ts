@@ -4,7 +4,7 @@ import { Gene, SpeciesTreeData } from '../types/biology';
 // Get API URL from environment variables with fallback
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL || 
                    process.env.VITE_BACKEND_URL || 
-                   'http://localhost:8003';
+                   'http://localhost:8002';
 
 console.log('Using backend URL:', BACKEND_URL);
 

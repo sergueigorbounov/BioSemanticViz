@@ -1,0 +1,117 @@
+{
+  "orthologues": {
+    "HUMAN_GENE1": {
+      "gene_id": "HUMAN_GENE1",
+      "gene_name": "HUMAN_GENE1",
+      "species_id": "HUMAN",
+      "species_name": "Homo sapiens",
+      "orthogroup_id": "OG0000001",
+      "orthologues": [
+        {
+          "gene_id": "MOUSE_GENE1",
+          "gene_name": "MOUSE_GENE1",
+          "species_id": "MOUSE",
+          "species_name": "Mus musculus",
+          "orthogroup_id": "OG0000001"
+        },
+        {
+          "gene_id": "ZEBRAFISH_GENE1",
+          "gene_name": "ZEBRAFISH_GENE1",
+          "species_id": "ZEBRAFISH",
+          "species_name": "Danio rerio",
+          "orthogroup_id": "OG0000001"
+        },
+        {
+          "gene_id": "FRUITFLY_GENE1",
+          "gene_name": "FRUITFLY_GENE1",
+          "species_id": "FRUITFLY",
+          "species_name": "Drosophila melanogaster",
+          "orthogroup_id": "OG0000001"
+        },
+        {
+          "gene_id": "YEAST_GENE1",
+          "gene_name": "YEAST_GENE1",
+          "species_id": "YEAST",
+          "species_name": "Saccharomyces cerevisiae",
+          "orthogroup_id": "OG0000001"
+        }
+      ]
+    },
+    "HUMAN_GENE2": {
+      "gene_id": "HUMAN_GENE2",
+      "gene_name": "HUMAN_GENE2",
+      "species_id": "HUMAN",
+      "species_name": "Homo sapiens",
+      "orthogroup_id": "OG0000002",
+      "orthologues": [
+        {
+          "gene_id": "MOUSE_GENE2",
+          "gene_name": "MOUSE_GENE2",
+          "species_id": "MOUSE",
+          "species_name": "Mus musculus",
+          "orthogroup_id": "OG0000002"
+        },
+        {
+          "gene_id": "ZEBRAFISH_GENE2",
+          "gene_name": "ZEBRAFISH_GENE2",
+          "species_id": "ZEBRAFISH",
+          "species_name": "Danio rerio",
+          "orthogroup_id": "OG0000002"
+        }
+      ]
+    },
+    "HUMAN_GENE3": {
+      "gene_id": "HUMAN_GENE3",
+      "gene_name": "HUMAN_GENE3",
+      "species_id": "HUMAN",
+      "species_name": "Homo sapiens",
+      "orthogroup_id": "OG0000003",
+      "orthologues": [
+        {
+          "gene_id": "MOUSE_GENE3",
+          "gene_name": "MOUSE_GENE3",
+          "species_id": "MOUSE",
+          "species_name": "Mus musculus",
+          "orthogroup_id": "OG0000003"
+        }
+      ]
+    },
+    "MOUSE_GENE1": {
+      "gene_id": "MOUSE_GENE1",
+      "gene_name": "MOUSE_GENE1",
+      "species_id": "MOUSE",
+      "species_name": "Mus musculus",
+      "orthogroup_id": "OG0000001",
+      "orthologues": [
+        {
+          "gene_id": "HUMAN_GENE1",
+          "gene_name": "HUMAN_GENE1",
+          "species_id": "HUMAN",
+          "species_name": "Homo sapiens",
+          "orthogroup_id": "OG0000001"
+        },
+        {
+          "gene_id": "ZEBRAFISH_GENE1",
+          "gene_name": "ZEBRAFISH_GENE1",
+          "species_id": "ZEBRAFISH",
+          "species_name": "Danio rerio",
+          "orthogroup_id": "OG0000001"
+        },
+        {
+          "gene_id": "FRUITFLY_GENE1",
+          "gene_name": "FRUITFLY_GENE1",
+          "species_id": "FRUITFLY",
+          "species_name": "Drosophila melanogaster",
+          "orthogroup_id": "OG0000001"
+        },
+        {
+          "gene_id": "YEAST_GENE1",
+          "gene_name": "YEAST_GENE1",
+          "species_id": "YEAST",
+          "species_name": "Saccharomyces cerevisiae",
+          "orthogroup_id": "OG0000001"
+        }
+      ]
+    }
+  }
+} 

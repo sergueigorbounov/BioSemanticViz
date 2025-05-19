@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// Ensure we're using port 8003 where our server is running
-const apiUrl = 'http://localhost:8003';
+// Ensure we're using port 8002 where our server is running
+const apiUrl = 'http://localhost:8002';
 
 // Create API client with better error handling
 const phyloClient = axios.create({
