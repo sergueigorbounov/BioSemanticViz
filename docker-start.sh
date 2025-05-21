@@ -169,7 +169,12 @@ fi
 echo -e "${YELLOW}Setting up required directories...${NC}"
 mkdir -p nginx
 mkdir -p backend/app/uploads
-
+# Stop and remove any existing containers first
+echo -e "${YELLOW}Stopping and removing any existing containers...${NC}"
+# Force remove any existing containers with these names
+echo -e "${YELLOW}Force removing any existing containers with conflicting names...${NC}"
+docker rm -f biosemantic-backend biosemantic-frontend biosemantic-nginx 2>/dev/null || true
+docker-compose down --remove-orphans
 # Build and start containers
 echo -e "${YELLOW}Building and starting containers...${NC}"
 docker-compose up --build

@@ -1,0 +1,63 @@
+@startuml
+!theme plain
+skinparam componentStyle rectangle
+
+' Frontend
+package "Frontend" {
+  [React App] as ReactApp
+  [Components] as Components
+  [API Client] as APIClient
+  [State Management] as StateManagement
+}
+
+' Backend
+package "Backend" {
+  [FastAPI] as FastAPI
+  [Data Processing] as DataProcessing
+  [File Handling] as FileHandling
+  [Orthologue Service] as OrthologueService
+}
+
+' External Systems
+database "Newick Tree" as NewickTree
+database "Orthogroup Data" as OrthogroupData
+database "Species Mapping" as SpeciesMapping
+
+' Frontend to Backend
+ReactApp --> APIClient
+APIClient --> FastAPI
+
+' Backend to External Systems
+FastAPI --> DataProcessing
+DataProcessing --> FileHandling
+FileHandling --> NewickTree
+FileHandling --> OrthogroupData
+FileHandling --> SpeciesMapping
+
+' Backend to Orthologue Service
+DataProcessing --> OrthologueService
+
+' Frontend Components
+Components --> ReactApp
+StateManagement --> ReactApp
+
+' Docker and Docker Compose
+package "Docker" {
+  [Frontend Container] as FrontendContainer
+  [Backend Container] as BackendContainer
+}
+
+' Docker Compose
+package "Docker Compose" {
+  [docker-compose.yml] as DockerCompose
+}
+
+' Docker to Components
+FrontendContainer --> ReactApp
+BackendContainer --> FastAPI
+
+' Docker Compose to Docker
+DockerCompose --> FrontendContainer
+DockerCompose --> BackendContainer
+
+@enduml 
